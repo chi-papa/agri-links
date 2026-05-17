@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主要取引先カタログ一覧</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f8f9fa; color:#333; font-family: sans-serif;">
+
+    <!-- ヘッダー -->
+    <div style="background:linear-gradient(135deg,#2c3e50,#27ae60); color:white; padding:40px 20px; text-align:center; margin-bottom:24px;">
+        <h1 style="margin:0 0 8px; font-weight:bold; font-size:1.8rem;">主要取引先カタログ一覧</h1>
+        <p style="margin:0; font-size:1.1rem;">農業資材メーカーの公式サイト・Webカタログへすぐにアクセスできます</p>
+    </div>
+
+    <!-- 頭文字フィルター -->
+    <div style="max-width:1200px; margin:0 auto 16px; padding:0 16px;">
+        <div id="kana-filter" style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center;"></div>
+    </div>
+
+    <!-- 件数表示 -->
+    <div style="max-width:1200px; margin:0 auto 12px; padding:0 16px;">
+        <p id="count-label" style="margin:0; font-size:0.85rem; color:#666;"></p>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <div style="max-width:1200px; margin:0 auto 60px; padding:0 16px;">
+        <div id="card-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:24px;">
+
+            <!-- アキレス -->
+            <div class="card" data-kana="あ" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">アキレス</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">あ</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：ファインシェード（ハウス用遮光剤）、ファインシェード除去剤</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://achilles.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://achilles.jp" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- 安全興業 -->
+            <div class="card" data-kana="あ" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">安全興業</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">あ</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：採集コンテナ、あぜ板、雨水タンク、砂利どめーる</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://anzenkogyo.com" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://anzenkogyo.com" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- 一色本店 -->
+            <div class="card" data-kana="い" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">一色本店</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">い</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：トルシーシリーズ（鮮やかな色で害虫を引きつけて捕獲、抵抗性のある虫にも効果的）</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://a117.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://a117.co.jp/%E8%87%AA%E7%A4%BE%E8%A3%BD%E5%93%81/%E3%83%AA%E3%83%BC%E3%83%95%E3%83%AC%E3%83%83%E3%83%88/%E7%B7%8F%E5%90%88%E3%82%AB%E3%82%BF%E3%83%AD%E3%82%B0-vol.8.pdf" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- 岩谷マテリアル -->
+            <div class="card" data-kana="い" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">岩谷マテリアル</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">い</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">（※今後データが追加されます）</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://imcjpn.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">製品紹介ページ</a>
+                </div>
+            </div>
+
+            <!-- 槍木産業 -->
+            <div class="card" data-kana="う" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">槍木産業</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">う</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：黒丸君、植えまき君、ヘアピン杭、小型マキトール、マルチパートナー</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://utsugi-industry.net" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">主要製品ページ</a>
+                </div>
+            </div>
+
+            <!-- MKVアドバンス -->
+            <div class="card" data-kana="え" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">MKVアドバンス</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">え</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：エバフロー、キリコ、スソピー、パオパオ、ダイヤスター、カエルーチ</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://mkv-a.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">カタログDLページ</a>
+                    <a href="https://mkv-a.co.jp" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">総合カタログPDF</a>
+                </div>
+            </div>
+
+            <!-- OATアグリオ -->
+            <div class="card" data-kana="お" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">OATアグリオ</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">お</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：サンピ833neo（葉面散布用肥料）、ホスプラス（亜リン酸液肥）、炎天マスター</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://oat-agrio.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">製品案内</a>
+                    <a href="https://oat-agrio.co.jp#product_list_area" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webチラシ</a>
+                </div>
+            </div>
+
+            <!-- オギハラ工業 -->
+            <div class="card" data-kana="お" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">オギハラ工業</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">お</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：クリーントーミ（F1手動式、F2モーター式、F3モーター式可変）、クリーンクリーナー（苗箱洗浄）</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://welcome-ogihara.com" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">製品情報</a>
+                    <a href="https://welcome-ogihara.com" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">カタログ情報</a>
+                </div>
+            </div>
+
+            <!-- 環境技研 -->
+            <div class="card" data-kana="か" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">環境技研</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">か</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：米ガード、米ガードミニ</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://kankyou-giken.com" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                </div>
+            </div>
+
+            <!-- 貴志金物 -->
+            <div class="card" data-kana="き" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">貴志金物</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">き</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">（製品情報確認中）</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://kishikk.com" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                </div>
+            </div>
+
+            <!-- キュウホー -->
+            <div class="card" data-kana="き" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">キュウホー</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">き</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：魔法のカルチ（手押し式除草機）、新魔法のカルチ</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://q-hoe.com" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">製品・サービス</a>
+                    <a href="https://q-hoe.com" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- キンボシ -->
+            <div class="card" data-kana="き" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">キンボシ</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">き</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">（製品カタログ公開サイト）</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://golden-star.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://golden-star.co.jp/WPk1nb0sh1/wp-content/uploads/2025/12/kinboshi-catalog2026-2027_gs-2026-01.pdf" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">総合カタログPDF</a>
+                </div>
+            </div>
+
+            <!-- サカタのタネ -->
+            <div class="card" data-kana="さ" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">サカタのタネ</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">さ</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：ホスカル（病害抵抗強化）、ホストップ（徒長防止・根はり強化）、ホスマグ（光合成促進、下葉の黄化防止）</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://sakataseed.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://sakata-netshop.com" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- 住化アグリテック -->
+            <div class="card" data-kana="さ" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">住化アグリテック</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">さ</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：ミストエース、スミサンスイ、SNZファインフィルター、スミチャージN40/50</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://sumika-agritech.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://sumika-agritech.co.jp" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- サンポリ -->
+            <div class="card" data-kana="さ" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">サンポリ</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">さ</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：楽育、水番（水田用給排水口）、アゼ板なみ、堆肥ワク、楽カル、仮設階段、サンクイ</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://sunpoly.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://sunpoly.jp/products/products-contents/#nougyou" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- サンホープ -->
+            <div class="card" data-kana="さ" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">サンホープ</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">さ</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：スクリーンフィルター、ディスクフィルター、サンドフィルター</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://sunhope.com" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://sunhope.com/products/index.html" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- シーム -->
+            <div class="card" data-kana="し" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">シーム</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">し</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：しちゅうキャッチ、くきたっちアルファ、ゆーいんキャッチ、トップフック、ジョインホルダー</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://seem.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://seem.jp/pdf/seem_catalog.pdf" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- シンワ -->
+            <div class="card" data-kana="し" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">シンワ</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">し</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：デジタル温度計、ウォーキングメジャー、デジタル糖度計</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://shinwasokutei.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://shinwasokutei.co.jp/catalog/japan/#page=1" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- シンセイ -->
+            <div class="card" data-kana="し" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">シンセイ</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">し</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：園芸支柱イボ付、あぜシート押さえ、十字キャップ、アルミ三脚、アニマルフェンス</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://trading-shinsei.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">製品一覧ページ</a>
+                </div>
+            </div>
+
+            <!-- スイコー -->
+            <div class="card" data-kana="す" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">スイコー</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">す</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：スイコー活魚タンク、薬注タンク、除草剤タンク</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://e-suiko.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://e-suiko.co.jp/catalog/" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- 根岸産業 -->
+            <div class="card" data-kana="ね" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">根岸産業</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">ね</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：如雨露、ハス口・こし網</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://jorro.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="http://negishi-joro.co.jp" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- ハイポネックス -->
+            <div class="card" data-kana="は" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">ハイポネックス</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">は</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：ライゾー（根はり促進肥料）、ボンバルディア（有機活力液肥）、フォスビットK（亜リン酸液肥）</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://hyponex.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://hyponex.co.jp/digital-book-list/" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- 花ごころ -->
+            <div class="card" data-kana="は" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">花ごころ</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">は</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：高濃度フルボ酸活力液 T-1</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://hanagokoro.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                </div>
+            </div>
+
+            <!-- ハラックス -->
+            <div class="card" data-kana="は" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">ハラックス</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">は</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：ウエラック、アルステップ、コン助ラック、グラコロ</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://harax.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://harax.co.jp/catalogue2026/" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- 美膳 -->
+            <div class="card" data-kana="ひ" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">美膳</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">ひ</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：はこらく、水田用溝切機、米袋運搬台車、健苗ローラー、のぼレール</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://kk-bizen.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://kk-bizen.jp" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- 広田産業 -->
+            <div class="card" data-kana="ひ" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">広田産業</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">ひ</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：みくに式種まき機、みくに式 散粒機５０</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="http://hirota-sangyo.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://ipros.com" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- 福助 -->
+            <div class="card" data-kana="ふ" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">福助</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">ふ</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：ユニパック（0.04/0.08）、ディプロ 除菌 ウェットワイパー</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://fukusuke-kogyo.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://fukusuke-kogyo.co.jp/products/web" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- フクトウ -->
+            <div class="card" data-kana="ふ" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">フクトウ</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">ふ</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">みのるの部品表参考サイト</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://fukutou.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">みのる部品表</a>
+                </div>
+            </div>
+
+            <!-- マックス -->
+            <div class="card" data-kana="ま" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">マックス</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">ま</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：結束機テープナー、光分解テープ、ステープル、ザクリオ</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://max-ltd.co.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://max-ltd.co.jp/support/download/af/catalog/" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- マリンプラスチック -->
+            <div class="card" data-kana="ま" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">マリンプラスチック</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">ま</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：フレコン、丸型くみたて槽、角型くみたて槽、フレキシブルコンテナ</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://n-m-p.net" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://n-m-p.net" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+            <!-- みのる産業 -->
+            <div class="card" data-kana="み" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">みのる産業</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">み</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">主な製品：ツッキー、もち切機、追肥機、ステッキ注入機、播種機、ハンドプランター</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://agri-style.com" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://agri-style.com" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">取り扱い説明書</a>
+                </div>
+            </div>
+
+            <!-- 未来のアグリ -->
+            <div class="card" data-kana="み" style="background:#fff; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:16px; display:flex; flex-direction:column; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h5 style="margin:0; font-weight:bold;">未来のアグリ</h5>
+                    <span style="background:#e74c3c; color:white; font-size:0.85rem; padding:4px 8px; border-radius:5px;">み</span>
+                </div>
+                <p style="color:#666; font-size:0.85rem; margin:0 0 16px; flex-grow:1;">（製品カタログ情報）</p>
+                <div style="display:grid; gap:8px;">
+                    <a href="https://mirai-no-agri.jp" target="_blank" style="display:block; text-align:center; background:#27ae60; color:white; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">公式サイト</a>
+                    <a href="https://mirai-no-agri.jp/products/catalog/" target="_blank" style="display:block; text-align:center; border:1px solid #34495e; color:#34495e; border-radius:5px; padding:6px; text-decoration:none; font-size:0.85rem;">Webカタログ</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const ACTIVE_BG  = '#27ae60';
+        const ACTIVE_CLR = '#fff';
+        const DEFAULT_BG = '#fff';
+        const DEFAULT_CLR = '#27ae60';
+        const BORDER_CLR = '#27ae60';
+
+        const cards = Array.from(document.querySelectorAll('.card'));
+
+        // 出現順に頭文字を収集（重複排除）
+        const kanaOrder = [];
+        cards.forEach(c => {
+            const k = c.dataset.kana;
+            if (!kanaOrder.includes(k)) kanaOrder.push(k);
+        });
+
+        const filterWrap = document.getElementById('kana-filter');
+        let active = 'all';
+
+        function applyStyle(btn, isActive) {
+            btn.style.cssText = [
+                'cursor:pointer',
+                'padding:6px 16px',
+                'border-radius:20px',
+                `border:2px solid ${BORDER_CLR}`,
+                'font-size:0.9rem',
+                'font-weight:bold',
+                'transition:background 0.15s, color 0.15s',
+                `background:${isActive ? ACTIVE_BG : DEFAULT_BG}`,
+                `color:${isActive ? ACTIVE_CLR : DEFAULT_CLR}`,
+            ].join(';');
+        }
+
+        function createBtn(label, value) {
+            const btn = document.createElement('button');
+            btn.textContent = label;
+            btn.dataset.value = value;
+            applyStyle(btn, value === active);
+            btn.addEventListener('click', () => {
+                active = value;
+                filterWrap.querySelectorAll('button').forEach(b => applyStyle(b, b.dataset.value === active));
+                applyFilter();
+            });
+            return btn;
+        }
+
+        // 「すべて」ボタン
+        filterWrap.appendChild(createBtn('すべて', 'all'));
+        // 各頭文字ボタン
+        kanaOrder.forEach(k => filterWrap.appendChild(createBtn(k, k)));
+
+        function applyFilter() {
+            let visible = 0;
+            cards.forEach(card => {
+                const show = active === 'all' || card.dataset.kana === active;
+                card.style.display = show ? 'flex' : 'none';
+                if (show) visible++;
+            });
+            document.getElementById('count-label').textContent =
+                active === 'all' ? `全 ${visible} 件` : `「${active}」 ${visible} 件`;
+        }
+
+        applyFilter();
+    </script>
+
+</body>
+</html>
