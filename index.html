@@ -22,6 +22,16 @@
     --shadow:   rgba(61,52,40,0.07);
     --danger:   #B94040;
     --danger-lt:#F5E0E0;
+
+    /* ── 監視システム追加カラー（既存パレットと調和） ── */
+    --watch-ok:      #4A7C59;   /* 🟢 正常：緑系 */
+    --watch-ok-lt:   #D8EDDF;
+    --watch-warn:    #A07830;   /* 🟡 未確認：琥珀系 */
+    --watch-warn-lt: #F5EDD8;
+    --watch-alert:   #B94040;   /* 🔴 変更あり：赤系（既存dangerと統一） */
+    --watch-alert-lt:#F5E0E0;
+    --watch-none:    #9A9080;   /* ⚪ 監視未設定：グレー */
+    --watch-none-lt: #EDEAE4;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--cream); color: var(--brown); font-family: 'Noto Sans JP', sans-serif; min-height: 100vh; }
@@ -34,7 +44,7 @@
   .site-header p { color:var(--cream-dk); font-size:.85rem; letter-spacing:.04em; opacity:.8; }
 
   /* ─── TOOLBAR ─── */
-  .toolbar { background: var(--brown-md); padding: 10px 20px; display: flex; justify-content: flex-end; gap: 8px; align-items: center; }
+  .toolbar { background: var(--brown-md); padding: 10px 20px; display: flex; justify-content: flex-end; gap: 8px; align-items: center; flex-wrap: wrap; }
   .toolbar-btn { cursor:pointer; padding:6px 16px; border-radius:4px; font-size:.8rem; font-family:'Noto Sans JP',sans-serif; font-weight:700; border:none; letter-spacing:.04em; transition:opacity .15s, transform .1s; }
   .toolbar-btn:active { transform: scale(.97); }
   .btn-add    { background: var(--green); color: #fff; }
@@ -44,6 +54,15 @@
   .btn-import { background: var(--cream-dk); color: var(--brown); }
   .btn-import:hover { opacity:.88; }
   .save-badge { font-size:.72rem; color: var(--accent-lt); letter-spacing:.04em; opacity:.8; margin-right:auto; }
+
+  /* ── 監視ボタン（ツールバーに自然になじむスタイル） ── */
+  .toolbar-sep { width:1px; height:24px; background:rgba(255,255,255,.2); margin:0 2px; }
+  .btn-watch-start  { background: var(--watch-ok);    color: #fff; }
+  .btn-watch-start:hover { opacity:.85; }
+  .btn-watch-check  { background: var(--watch-warn);  color: #fff; }
+  .btn-watch-check:hover { opacity:.85; }
+  .btn-watch-hist   { background: var(--cream-dk);    color: var(--brown-md); }
+  .btn-watch-hist:hover { background: var(--cream); }
 
   /* ─── DIVIDER ─── */
   .divider { height:4px; background:linear-gradient(90deg,var(--green-dk),var(--green),var(--accent),var(--green),var(--green-dk)); }
@@ -87,6 +106,27 @@
   .btn-del-card  { background:var(--danger-lt); color:var(--danger); border:1px solid var(--danger); }
   .btn-del-card:hover { background:var(--danger); color:#fff; }
 
+  /* ── 監視ステータスバッジ（カード内に追加） ── */
+  .watch-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: .72rem;
+    font-weight: 500;
+    letter-spacing: .03em;
+    border: 1px solid transparent;
+  }
+  .watch-status.ok     { background: var(--watch-ok-lt);    color: var(--watch-ok);    border-color: #b8d8c0; }
+  .watch-status.warn   { background: var(--watch-warn-lt);  color: var(--watch-warn);  border-color: #d8c898; }
+  .watch-status.alert  { background: var(--watch-alert-lt); color: var(--watch-alert); border-color: #d8a8a8; }
+  .watch-status.none   { background: var(--watch-none-lt);  color: var(--watch-none);  border-color: #d0ccc4; }
+  .watch-dot { font-size: .8rem; }
+  .watch-info { flex: 1; line-height: 1.3; }
+  .watch-info-date { font-size: .68rem; opacity: .75; }
+
   /* ─── MODAL OVERLAY ─── */
   .modal-overlay { display:none; position:fixed; inset:0; background:rgba(40,30,20,.55); z-index:200; align-items:center; justify-content:center; padding:20px; }
   .modal-overlay.open { display:flex; }
@@ -116,6 +156,71 @@
 
   /* ─── FOOTER ─── */
   .site-footer { background:var(--brown); color:var(--cream-dk); text-align:center; padding:18px; font-size:.75rem; letter-spacing:.04em; opacity:.75; }
+
+  /* ══ 監視モーダル（既存モーダルと統一スタイル） ══ */
+  /* 監視履歴モーダル */
+  .modal-wide { max-width: 800px; }
+  .hist-toolbar { display:flex; justify-content:flex-end; gap:8px; margin-bottom:14px; }
+  .hist-table-wrap { overflow-x:auto; max-height:460px; overflow-y:auto; border:1px solid var(--border); border-radius:6px; }
+  table.hist-table { width:100%; border-collapse:collapse; font-size:.78rem; }
+  table.hist-table th {
+    position: sticky; top: 0;
+    background: var(--brown-md); color: var(--cream);
+    padding: 8px 10px; text-align: left;
+    font-size: .72rem; letter-spacing: .05em;
+    white-space: nowrap;
+  }
+  table.hist-table td { padding:7px 10px; border-bottom:1px solid var(--border); vertical-align:top; word-break:break-all; }
+  table.hist-table tr:last-child td { border-bottom:none; }
+  table.hist-table tr:nth-child(even) td { background: rgba(212,203,186,.15); }
+  .change-type-badge {
+    display:inline-block; padding:2px 7px; border-radius:3px;
+    font-size:.68rem; font-weight:700; letter-spacing:.04em;
+  }
+  .badge-size     { background:var(--accent-lt);       color:var(--accent); }
+  .badge-modified { background:var(--watch-warn-lt);   color:var(--watch-warn); }
+  .badge-etag     { background:var(--green-lt);         color:var(--green-dk); }
+  .badge-new      { background:var(--watch-none-lt);   color:var(--watch-none); }
+  .hist-empty { text-align:center; padding:32px; color:var(--text-sub); font-size:.85rem; }
+
+  /* 監視進捗インジケーター */
+  .watch-progress-bar {
+    height: 3px;
+    background: var(--green-lt);
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+    margin-top: 10px;
+    display: none;
+  }
+  .watch-progress-bar.active { display: block; }
+  .watch-progress-inner {
+    position: absolute; top: 0; left: -40%;
+    width: 40%; height: 100%;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+    animation: waveSlide 1.2s linear infinite;
+  }
+  @keyframes waveSlide { to { left: 100%; } }
+
+  /* 監視サマリーバー */
+  .watch-summary-bar {
+    max-width:1200px; margin:0 auto 0;
+    padding:8px 20px;
+    display: none; /* 監視データがある場合のみ表示 */
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: .78rem;
+  }
+  .watch-summary-bar.visible { display: flex; }
+  .watch-sum-item { display:flex; align-items:center; gap:5px; }
+  .watch-sum-dot { width:8px; height:8px; border-radius:50%; }
+  .ws-ok    { background: var(--watch-ok); }
+  .ws-warn  { background: var(--watch-warn); }
+  .ws-alert { background: var(--watch-alert); }
+  .watch-sum-label { color: var(--text-sub); }
+  .watch-sum-count { font-weight:700; color: var(--brown); }
+  .watch-sum-last  { margin-left:auto; color:var(--text-sub); font-size:.72rem; }
 </style>
 </head>
 <body>
@@ -134,11 +239,45 @@
   <button class="toolbar-btn btn-import" onclick="importData()">📂 データ読込</button>
   <button class="toolbar-btn btn-add"  onclick="openAddModal()">＋ メーカー追加</button>
   <button class="toolbar-btn btn-save" onclick="saveData()">💾 保存（HTMLとして）</button>
+
+  <!-- ── セパレーター ── -->
+  <div class="toolbar-sep"></div>
+
+  <!-- ── 監視システムボタン（既存ボタンと並べて追加） ── -->
+  <button class="toolbar-btn btn-watch-start" id="btn-watch-start" onclick="watchStart()">👁 監視スタート</button>
+  <button class="toolbar-btn btn-watch-check" onclick="watchCheckChanges()">🔍 変更確認</button>
+  <button class="toolbar-btn btn-watch-hist"  onclick="openHistoryModal()">📜 履歴</button>
+</div>
+
+<!-- ── 監視進捗バー（監視実行中に表示） ── -->
+<div class="watch-progress-bar" id="watch-progress">
+  <div class="watch-progress-inner"></div>
 </div>
 
 <!-- ─── FILTER BAR ─── -->
 <div class="filter-wrap" aria-label="頭文字フィルター">
   <div class="filter-inner" id="kana-filter"></div>
+</div>
+
+<!-- ── 監視サマリーバー（監視データがある場合のみ表示） ── -->
+<div class="watch-summary-bar" id="watch-summary-bar">
+  <span style="font-size:.72rem; color:var(--text-sub); letter-spacing:.06em; font-weight:700;">監視状況：</span>
+  <div class="watch-sum-item">
+    <div class="watch-sum-dot ws-ok"></div>
+    <span class="watch-sum-label">正常</span>
+    <span class="watch-sum-count" id="ws-ok-count">0</span>
+  </div>
+  <div class="watch-sum-item">
+    <div class="watch-sum-dot ws-warn"></div>
+    <span class="watch-sum-label">未確認</span>
+    <span class="watch-sum-count" id="ws-warn-count">0</span>
+  </div>
+  <div class="watch-sum-item">
+    <div class="watch-sum-dot ws-alert"></div>
+    <span class="watch-sum-label">変更あり</span>
+    <span class="watch-sum-count" id="ws-alert-count">0</span>
+  </div>
+  <span class="watch-sum-last" id="ws-last-check"></span>
 </div>
 
 <div class="count-bar">
@@ -152,7 +291,7 @@
 
 <footer class="site-footer">© 主要取引先カタログ一覧</footer>
 
-<!-- ─── MODAL ─── -->
+<!-- ─── MODAL：メーカー追加／編集（既存） ─── -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal">
     <h2 id="modal-title">メーカー追加</h2>
@@ -182,6 +321,21 @@
   </div>
 </div>
 
+<!-- ─── MODAL：監視履歴（新規追加） ─── -->
+<div class="modal-overlay" id="modal-history">
+  <div class="modal modal-wide">
+    <h2>📜 監視変更履歴</h2>
+    <div class="hist-toolbar">
+      <button class="toolbar-btn btn-import" onclick="exportHistoryJson()">⬇ JSONエクスポート</button>
+      <button class="toolbar-btn btn-del-card" style="padding:6px 16px; font-size:.8rem;" onclick="clearHistory()">🗑 履歴クリア</button>
+      <button class="btn-cancel" onclick="closeHistoryModal()">閉じる</button>
+    </div>
+    <div class="hist-table-wrap" id="hist-table-wrap">
+      <!-- JSで動的生成 -->
+    </div>
+  </div>
+</div>
+
 <!-- ─── TOAST ─── -->
 <div class="toast" id="toast"></div>
 
@@ -189,9 +343,9 @@
 <input type="file" id="file-input" accept=".html" style="display:none" onchange="handleImport(event)">
 
 <script>
-/* ══════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════
    初期データ（埋め込み）
-   ══════════════════════════════════════════════ */
+   ══════════════════════════════════════════════════════════════════ */
 const INIT_DATA = [
   { id:1,  kana:"あ", name:"アキレス",       desc:"主な製品：ファインシェード（ハウス用遮光剤）、ファインシェード除去剤",
     links:[{label:"公式サイト",url:"https://achilles.jp",primary:true},{label:"Webカタログ",url:"https://achilles.jp",primary:false}] },
@@ -259,17 +413,740 @@ const INIT_DATA = [
     links:[{label:"公式サイト",url:"https://mirai-no-agri.jp",primary:true},{label:"Webカタログ",url:"https://mirai-no-agri.jp/products/catalog/",primary:false}] },
 ];
 
-/* ══════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════
+   定数管理
+   ── ここを変更するだけで動作を調整できます ──
+   ══════════════════════════════════════════════════════════════════ */
+const CONSTANTS = {
+  /* localStorage のキー名 */
+  STORAGE_KEY_WATCH:   'catalog_watch_data',    // URL監視データ保存キー
+  STORAGE_KEY_HISTORY: 'catalog_watch_history', // 変更履歴保存キー
+
+  /* 監視の並列リクエスト数（大きすぎるとブラウザ制限に引っかかる） */
+  FETCH_CONCURRENCY: 5,
+
+  /* 1リクエストのタイムアウト（ミリ秒） */
+  FETCH_TIMEOUT_MS: 10000,
+
+  /* 履歴の最大保存件数（古いものから削除） */
+  HISTORY_MAX: 500,
+
+  /* 変更なし判定のラベル */
+  STATUS: {
+    OK:    'ok',     // 🟢 正常（前回と同じ）
+    WARN:  'warn',   // 🟡 未確認（初回取得など）
+    ALERT: 'alert',  // 🔴 変更あり
+    NONE:  'none',   // ⚪ 監視データなし
+  },
+
+  /* 変更種別ラベル */
+  CHANGE_TYPE: {
+    LAST_MODIFIED: 'lastModified変更',
+    ETAG:          'ETag変更',
+    SIZE:          'ファイルサイズ変更',
+    NEW:           '初回取得',
+    ERROR:         '取得エラー',
+  }
+};
+
+/* ══════════════════════════════════════════════════════════════════
    状態管理
-   ══════════════════════════════════════════════ */
-let suppliers = JSON.parse(JSON.stringify(INIT_DATA));
-let nextId    = Math.max(...suppliers.map(s => s.id)) + 1;
+   ══════════════════════════════════════════════════════════════════ */
+let suppliers  = JSON.parse(JSON.stringify(INIT_DATA)); // メーカー一覧
+let nextId     = Math.max(...suppliers.map(s => s.id)) + 1;
 let activeKana = 'all';
 let editingId  = null;
 
-/* ══════════════════════════════════════════════
-   レンダリング
-   ══════════════════════════════════════════════ */
+/* ── 監視システム用の状態 ── */
+let watchRunning = false; // 監視が実行中かどうか
+
+/* ══════════════════════════════════════════════════════════════════
+   ■ 監視システム：localStorage ヘルパー
+   ══════════════════════════════════════════════════════════════════ */
+
+/**
+ * 監視データをlocalStorageから取得する
+ * @returns {Object} { "https://...": { url, lastModified, etag, size, checkedAt, status }, ... }
+ */
+function loadWatchData() {
+  try {
+    const raw = localStorage.getItem(CONSTANTS.STORAGE_KEY_WATCH);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    console.warn('[Watch] watchデータ読み込み失敗:', e);
+    return {};
+  }
+}
+
+/**
+ * 監視データをlocalStorageへ保存する
+ * @param {Object} data - loadWatchData() と同じ形式
+ */
+function saveWatchData(data) {
+  try {
+    localStorage.setItem(CONSTANTS.STORAGE_KEY_WATCH, JSON.stringify(data));
+  } catch (e) {
+    console.warn('[Watch] watchデータ保存失敗:', e);
+  }
+}
+
+/**
+ * 変更履歴をlocalStorageから取得する
+ * @returns {Array} 履歴エントリの配列（新しいものが先頭）
+ */
+function loadHistory() {
+  try {
+    const raw = localStorage.getItem(CONSTANTS.STORAGE_KEY_HISTORY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    console.warn('[Watch] 履歴読み込み失敗:', e);
+    return [];
+  }
+}
+
+/**
+ * 変更履歴をlocalStorageへ保存する（最大件数を超えたら古いものを削除）
+ * @param {Array} history - loadHistory() と同じ形式
+ */
+function saveHistory(history) {
+  try {
+    // 最大件数を超えたら末尾（古いもの）を切り捨て
+    const trimmed = history.slice(0, CONSTANTS.HISTORY_MAX);
+    localStorage.setItem(CONSTANTS.STORAGE_KEY_HISTORY, JSON.stringify(trimmed));
+  } catch (e) {
+    console.warn('[Watch] 履歴保存失敗:', e);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ■ 監視システム：URLリスト収集
+   ══════════════════════════════════════════════════════════════════ */
+
+/**
+ * 全メーカーのリンクURLを一意なリストとして収集する
+ * メーカー名と紐づけた形で返す
+ * @returns {Array} [{ supplierName, url }, ...]
+ */
+function collectAllWatchUrls() {
+  const seen = new Set(); // 重複排除用
+  const result = [];
+
+  suppliers.forEach(s => {
+    s.links.forEach(l => {
+      if (!l.url) return;
+      // 同じURLが複数メーカーにあっても1回だけ登録
+      if (!seen.has(l.url)) {
+        seen.add(l.url);
+        result.push({
+          supplierName: s.name,
+          url: l.url
+        });
+      }
+    });
+  });
+
+  return result;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ■ 監視システム：URLフェッチ
+   ここを差し替えることで Node.js / GitHub Actions / Cloudflare Workers
+   への移行が容易になるよう、フェッチ処理を独立した関数にしています
+   ══════════════════════════════════════════════════════════════════ */
+
+/**
+ * 1つのURLを HEAD リクエストで確認し、メタ情報を返す
+ *
+ * ＜CORS制限について＞
+ * ブラウザから直接 fetch() すると、相手サーバーが CORS ヘッダーを
+ * 返していない場合にエラーになります（mode:'no-cors'でも
+ * ヘッダーは取得できません）。
+ *
+ * ＜将来の差し替えポイント＞
+ * この関数の中身だけ変えれば：
+ *   - Node.js サーバーへのリレーAPIとして動かせる
+ *   - GitHub Actions のワークフローで呼び出せる
+ *   - Cloudflare Workers のプロキシを経由できる
+ *
+ * @param {string} url - 確認対象のURL
+ * @returns {Promise<Object>} { url, lastModified, etag, size, checkedAt, fetchError }
+ */
+async function fetchUrlMeta(url) {
+  const checkedAt = formatDateTime(new Date());
+
+  // AbortController でタイムアウトを実装
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), CONSTANTS.FETCH_TIMEOUT_MS);
+
+  try {
+    // HEAD リクエストを試みる（ボディを取得せずメタ情報だけ確認）
+    const response = await fetch(url, {
+      method: 'HEAD',
+      mode:   'no-cors', // CORS制限がある場合もエラーを出さない設定
+                         // ただし no-cors だとヘッダーは読めない（opaque response）
+      signal: controller.signal,
+      cache:  'no-store', // キャッシュを使わず必ず新鮮な情報を取得
+    });
+
+    clearTimeout(timeoutId);
+
+    // no-corsの場合 response.type === 'opaque' になりヘッダーが読めない
+    // 将来プロキシ経由にする際はここを cors モードに変更する
+    const lastModified = response.headers?.get('Last-Modified') || null;
+    const etag         = response.headers?.get('ETag')          || null;
+    const contentLen   = response.headers?.get('Content-Length');
+    const size         = contentLen ? parseInt(contentLen, 10)  : null;
+
+    return { url, lastModified, etag, size, checkedAt, fetchError: null };
+
+  } catch (err) {
+    clearTimeout(timeoutId);
+
+    // タイムアウトとその他エラーを区別
+    const errMsg = err.name === 'AbortError' ? 'タイムアウト' : err.message;
+    console.warn(`[Watch] fetch失敗: ${url} → ${errMsg}`);
+
+    return { url, lastModified: null, etag: null, size: null, checkedAt, fetchError: errMsg };
+  }
+}
+
+/**
+ * 並列数を制御しながら複数URLをフェッチする
+ * Promise.allSettled を使い、1件失敗しても他の処理を止めない
+ *
+ * @param {Array}    urlItems   - [{ supplierName, url }, ...]
+ * @param {Function} onProgress - 1件完了するたびに呼ばれるコールバック (doneCount, total)
+ * @returns {Promise<Array>} fetchUrlMeta の結果配列
+ */
+async function fetchAllUrlMeta(urlItems, onProgress) {
+  const results = [];
+  const total   = urlItems.length;
+  let   done    = 0;
+
+  // 並列数を FETCH_CONCURRENCY に制限するバッチ処理
+  for (let i = 0; i < total; i += CONSTANTS.FETCH_CONCURRENCY) {
+    const batch = urlItems.slice(i, i + CONSTANTS.FETCH_CONCURRENCY);
+
+    // このバッチを並列実行（1件失敗しても他は継続）
+    const batchResults = await Promise.allSettled(
+      batch.map(item => fetchUrlMeta(item.url))
+    );
+
+    batchResults.forEach((result, idx) => {
+      if (result.status === 'fulfilled') {
+        // supplierName を付け加えて保存
+        results.push({ ...result.value, supplierName: batch[idx].supplierName });
+      } else {
+        // Promise.allSettled なのでここには来ないはずだが念のため
+        results.push({
+          url: batch[idx].url,
+          supplierName: batch[idx].supplierName,
+          fetchError: result.reason?.message || '不明なエラー',
+          checkedAt: formatDateTime(new Date())
+        });
+      }
+      done++;
+      if (onProgress) onProgress(done, total);
+    });
+  }
+
+  return results;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ■ 監視システム：変更検出
+   ══════════════════════════════════════════════════════════════════ */
+
+/**
+ * 新しく取得したメタ情報と保存済みデータを比較し、変更があれば検出する
+ *
+ * ＜将来のAI解析追加ポイント＞
+ * この関数の末尾で変更検出結果を AI API に送り、
+ * 「PDF内容の要約が変わったかどうか」などを判断させることができます。
+ *
+ * @param {Object} newMeta    - fetchUrlMeta の結果
+ * @param {Object} oldRecord  - loadWatchData() の1エントリ（なければ null）
+ * @returns {Array} 変更種別の配列（例：['lastModified変更', 'ファイルサイズ変更']）
+ */
+function detectChanges(newMeta, oldRecord) {
+  const changes = [];
+
+  // 初回取得の場合
+  if (!oldRecord) {
+    changes.push(CONSTANTS.CHANGE_TYPE.NEW);
+    return changes;
+  }
+
+  // エラーだった場合はスキップ（エラーは変更として記録しない）
+  if (newMeta.fetchError) return changes;
+
+  // Last-Modified の変化を検出
+  if (newMeta.lastModified && oldRecord.lastModified &&
+      newMeta.lastModified !== oldRecord.lastModified) {
+    changes.push(CONSTANTS.CHANGE_TYPE.LAST_MODIFIED);
+  }
+
+  // ETag の変化を検出
+  if (newMeta.etag && oldRecord.etag &&
+      newMeta.etag !== oldRecord.etag) {
+    changes.push(CONSTANTS.CHANGE_TYPE.ETAG);
+  }
+
+  // ファイルサイズの変化を検出
+  if (newMeta.size !== null && oldRecord.size !== null &&
+      newMeta.size !== oldRecord.size) {
+    changes.push(CONSTANTS.CHANGE_TYPE.SIZE);
+  }
+
+  return changes;
+}
+
+/**
+ * 変更種別の配列からカードに表示するステータスを決定する
+ * @param {Array}   changes    - detectChanges() の結果
+ * @param {Object}  oldRecord  - 既存の監視データ（なければ null）
+ * @param {boolean} hasError   - fetchError があるかどうか
+ * @returns {string} CONSTANTS.STATUS のいずれか
+ */
+function determineStatus(changes, oldRecord, hasError) {
+  if (hasError) return CONSTANTS.STATUS.WARN; // エラーは未確認扱い
+
+  if (changes.includes(CONSTANTS.CHANGE_TYPE.NEW)) {
+    return CONSTANTS.STATUS.WARN; // 初回取得は未確認
+  }
+
+  if (changes.length > 0) {
+    return CONSTANTS.STATUS.ALERT; // 変更あり
+  }
+
+  return CONSTANTS.STATUS.OK; // 変更なし = 正常
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ■ 監視システム：メイン処理
+   ══════════════════════════════════════════════════════════════════ */
+
+/**
+ * 「👁 監視スタート」ボタン処理
+ * 全メーカーのURLを巡回し、初回スナップショットを取得する
+ */
+async function watchStart() {
+  if (watchRunning) {
+    showToast('監視が既に実行中です。しばらくお待ちください');
+    return;
+  }
+
+  const urlItems = collectAllWatchUrls();
+  if (urlItems.length === 0) {
+    showToast('監視対象のURLがありません');
+    return;
+  }
+
+  watchRunning = true;
+  setWatchProgressVisible(true);
+  document.getElementById('btn-watch-start').textContent = '⏳ 監視中...';
+  showToast(`${urlItems.length}件のURLを監視中...`);
+
+  try {
+    // フェッチ実行
+    const metaList = await fetchAllUrlMeta(urlItems, (done, total) => {
+      // 進捗はトーストで都度表示しない（完了時のみ）
+    });
+
+    // 既存の監視データを読み込む
+    const watchData = loadWatchData();
+    const history   = loadHistory();
+
+    // 各URLの結果を処理
+    metaList.forEach(meta => {
+      const old     = watchData[meta.url] || null;
+      const changes = detectChanges(meta, old);
+      const status  = determineStatus(changes, old, !!meta.fetchError);
+
+      // 監視データを更新（新規 or 上書き）
+      watchData[meta.url] = {
+        url:           meta.url,
+        supplierName:  meta.supplierName,
+        lastModified:  meta.lastModified,
+        etag:          meta.etag,
+        size:          meta.size,
+        checkedAt:     meta.checkedAt,
+        fetchError:    meta.fetchError,
+        status:        status,
+      };
+
+      // 変更があれば履歴に追加
+      if (changes.length > 0 && !changes.includes(CONSTANTS.CHANGE_TYPE.NEW)) {
+        addToHistory(history, meta, old, changes);
+      }
+    });
+
+    saveWatchData(watchData);
+    saveHistory(history);
+
+    // カードのバッジを更新
+    renderCards();
+    updateWatchSummary();
+
+    showToast(`監視完了：${urlItems.length}件確認しました`);
+  } catch (err) {
+    console.error('[Watch] 監視スタートエラー:', err);
+    showToast('監視中にエラーが発生しました');
+  } finally {
+    watchRunning = false;
+    setWatchProgressVisible(false);
+    document.getElementById('btn-watch-start').textContent = '👁 監視スタート';
+  }
+}
+
+/**
+ * 「🔍 変更確認」ボタン処理
+ * 前回の監視データと比較し、変更されたURLを検出する
+ */
+async function watchCheckChanges() {
+  if (watchRunning) {
+    showToast('監視が既に実行中です');
+    return;
+  }
+
+  const existingData = loadWatchData();
+  if (Object.keys(existingData).length === 0) {
+    showToast('先に「👁 監視スタート」を実行してください');
+    return;
+  }
+
+  const urlItems = collectAllWatchUrls();
+  watchRunning   = true;
+  setWatchProgressVisible(true);
+  showToast(`変更確認中：${urlItems.length}件...`);
+
+  try {
+    const metaList  = await fetchAllUrlMeta(urlItems, null);
+    const watchData = loadWatchData();
+    const history   = loadHistory();
+    let   alertCount = 0;
+
+    metaList.forEach(meta => {
+      const old     = watchData[meta.url] || null;
+      const changes = detectChanges(meta, old);
+      const status  = determineStatus(changes, old, !!meta.fetchError);
+
+      // ステータスだけ更新（取得できた情報で上書き）
+      watchData[meta.url] = {
+        ...((watchData[meta.url]) || {}),
+        url:          meta.url,
+        supplierName: meta.supplierName,
+        lastModified: meta.lastModified || watchData[meta.url]?.lastModified,
+        etag:         meta.etag         || watchData[meta.url]?.etag,
+        size:         meta.size         ?? watchData[meta.url]?.size,
+        checkedAt:    meta.checkedAt,
+        fetchError:   meta.fetchError,
+        status:       status,
+      };
+
+      // 実際の変更（初回取得を除く）があれば履歴に追加
+      const realChanges = changes.filter(c => c !== CONSTANTS.CHANGE_TYPE.NEW);
+      if (realChanges.length > 0) {
+        alertCount++;
+        addToHistory(history, meta, old, realChanges);
+      }
+    });
+
+    saveWatchData(watchData);
+    saveHistory(history);
+
+    renderCards();
+    updateWatchSummary();
+
+    if (alertCount > 0) {
+      showToast(`⚠ ${alertCount}件の変更を検出しました！「履歴」を確認してください`);
+    } else {
+      showToast('変更確認完了：変更は検出されませんでした');
+    }
+  } catch (err) {
+    console.error('[Watch] 変更確認エラー:', err);
+    showToast('変更確認中にエラーが発生しました');
+  } finally {
+    watchRunning = false;
+    setWatchProgressVisible(false);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ■ 監視システム：履歴管理
+   ══════════════════════════════════════════════════════════════════ */
+
+/**
+ * 変更を履歴に追加する
+ * @param {Array}  history  - 現在の履歴配列（破壊的に変更する）
+ * @param {Object} meta     - 新しいfetchUrlMeta結果
+ * @param {Object} oldData  - 古い監視データ
+ * @param {Array}  changes  - detectChanges の結果
+ */
+function addToHistory(history, meta, oldData, changes) {
+  changes.forEach(changeType => {
+    // 変更種別に応じて前回値・今回値を設定
+    let prevValue = '';
+    let newValue  = '';
+
+    if (changeType === CONSTANTS.CHANGE_TYPE.LAST_MODIFIED) {
+      prevValue = oldData?.lastModified || '(なし)';
+      newValue  = meta.lastModified      || '(なし)';
+    } else if (changeType === CONSTANTS.CHANGE_TYPE.ETAG) {
+      prevValue = oldData?.etag || '(なし)';
+      newValue  = meta.etag      || '(なし)';
+    } else if (changeType === CONSTANTS.CHANGE_TYPE.SIZE) {
+      prevValue = oldData?.size != null ? `${oldData.size.toLocaleString()} bytes` : '(不明)';
+      newValue  = meta.size      != null ? `${meta.size.toLocaleString()} bytes`   : '(不明)';
+    } else if (changeType === CONSTANTS.CHANGE_TYPE.NEW) {
+      prevValue = '(初回取得)';
+      newValue  = '初回スナップショット取得';
+    }
+
+    history.unshift({
+      supplierName: meta.supplierName || '',
+      url:          meta.url,
+      detectedAt:   meta.checkedAt,
+      changeType:   changeType,
+      prevValue:    prevValue,
+      newValue:     newValue,
+    });
+  });
+}
+
+/**
+ * 「📜 履歴」モーダルを開く
+ */
+function openHistoryModal() {
+  renderHistoryTable();
+  document.getElementById('modal-history').classList.add('open');
+}
+
+/**
+ * 履歴モーダルを閉じる
+ */
+function closeHistoryModal() {
+  document.getElementById('modal-history').classList.remove('open');
+}
+
+/**
+ * 履歴テーブルをHTMLとして描画する
+ */
+function renderHistoryTable() {
+  const wrap   = document.getElementById('hist-table-wrap');
+  const history = loadHistory();
+
+  if (history.length === 0) {
+    wrap.innerHTML = '<div class="hist-empty">📭 変更履歴はまだありません。<br>「👁 監視スタート」→「🔍 変更確認」を実行してください。</div>';
+    return;
+  }
+
+  // 変更種別に応じたバッジCSSクラスを返す
+  function badgeClass(changeType) {
+    if (changeType === CONSTANTS.CHANGE_TYPE.LAST_MODIFIED) return 'badge-modified';
+    if (changeType === CONSTANTS.CHANGE_TYPE.ETAG)          return 'badge-etag';
+    if (changeType === CONSTANTS.CHANGE_TYPE.SIZE)          return 'badge-size';
+    return 'badge-new';
+  }
+
+  const rows = history.map(h => `
+    <tr>
+      <td style="white-space:nowrap; font-weight:600;">${esc(h.supplierName)}</td>
+      <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;">
+        <a href="${esc(h.url)}" target="_blank" style="color:var(--green-dk); text-decoration:none;"
+           title="${esc(h.url)}">${esc(shortenUrl(h.url))}</a>
+      </td>
+      <td style="white-space:nowrap;">${esc(h.detectedAt)}</td>
+      <td><span class="change-type-badge ${badgeClass(h.changeType)}">${esc(h.changeType)}</span></td>
+      <td style="color:var(--text-sub);">${esc(h.prevValue)}</td>
+      <td>${esc(h.newValue)}</td>
+    </tr>
+  `).join('');
+
+  wrap.innerHTML = `
+    <table class="hist-table">
+      <thead>
+        <tr>
+          <th>メーカー名</th>
+          <th>URL</th>
+          <th>検出日時</th>
+          <th>変更種別</th>
+          <th>前回値</th>
+          <th>今回値</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+}
+
+/**
+ * 履歴をJSONファイルとしてエクスポートする
+ */
+function exportHistoryJson() {
+  const history = loadHistory();
+  if (history.length === 0) {
+    showToast('エクスポートする履歴がありません');
+    return;
+  }
+
+  const json     = JSON.stringify(history, null, 2);
+  const blob     = new Blob([json], { type: 'application/json;charset=utf-8' });
+  const a        = document.createElement('a');
+  a.href         = URL.createObjectURL(blob);
+  a.download     = `catalog_watch_history_${formatDateTimeFile(new Date())}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('JSONエクスポートしました');
+}
+
+/**
+ * 履歴を全件削除する
+ */
+function clearHistory() {
+  if (!confirm('変更履歴を全件削除しますか？この操作は元に戻せません。')) return;
+  saveHistory([]);
+  renderHistoryTable();
+  updateWatchSummary();
+  showToast('履歴を削除しました');
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ■ 監視システム：UIヘルパー
+   ══════════════════════════════════════════════════════════════════ */
+
+/**
+ * 進捗バーの表示・非表示を切り替える
+ * @param {boolean} visible
+ */
+function setWatchProgressVisible(visible) {
+  const bar = document.getElementById('watch-progress');
+  if (visible) {
+    bar.classList.add('active');
+  } else {
+    bar.classList.remove('active');
+  }
+}
+
+/**
+ * サマリーバーの数値を更新する
+ */
+function updateWatchSummary() {
+  const watchData = loadWatchData();
+  const records   = Object.values(watchData);
+
+  if (records.length === 0) {
+    document.getElementById('watch-summary-bar').classList.remove('visible');
+    return;
+  }
+
+  // ステータス別に集計
+  const okCount    = records.filter(r => r.status === CONSTANTS.STATUS.OK).length;
+  const warnCount  = records.filter(r => r.status === CONSTANTS.STATUS.WARN).length;
+  const alertCount = records.filter(r => r.status === CONSTANTS.STATUS.ALERT).length;
+
+  // 最終確認日時（最新のcheckedAt）
+  const lastCheck = records
+    .map(r => r.checkedAt)
+    .filter(Boolean)
+    .sort()
+    .at(-1) || '';
+
+  document.getElementById('ws-ok-count').textContent    = okCount;
+  document.getElementById('ws-warn-count').textContent  = warnCount;
+  document.getElementById('ws-alert-count').textContent = alertCount;
+  document.getElementById('ws-last-check').textContent  = lastCheck ? `最終確認：${lastCheck}` : '';
+
+  document.getElementById('watch-summary-bar').classList.add('visible');
+}
+
+/**
+ * 1メーカーの監視ステータスを取得する
+ * （カード内バッジ表示に使用）
+ *
+ * @param {Object} supplier - suppliersの1エントリ
+ * @returns {{ status: string, checkedAt: string|null, hasAlert: boolean }}
+ */
+function getSupplierWatchStatus(supplier) {
+  const watchData = loadWatchData();
+  let   worst     = null; // 最も重要なステータス（alertが最優先）
+  let   latestCheckedAt = null;
+
+  supplier.links.forEach(l => {
+    const record = watchData[l.url];
+    if (!record) return;
+
+    // 最新の確認日時を保持
+    if (!latestCheckedAt || record.checkedAt > latestCheckedAt) {
+      latestCheckedAt = record.checkedAt;
+    }
+
+    // 最悪ステータスを選択（alert > warn > ok の優先度）
+    const priority = { alert: 3, warn: 2, ok: 1, none: 0 };
+    if (!worst || priority[record.status] > priority[worst]) {
+      worst = record.status;
+    }
+  });
+
+  return {
+    status:     worst || CONSTANTS.STATUS.NONE,
+    checkedAt:  latestCheckedAt,
+    hasAlert:   worst === CONSTANTS.STATUS.ALERT,
+  };
+}
+
+/**
+ * ステータスに対応する絵文字と日本語ラベルを返す
+ * @param {string} status - CONSTANTS.STATUS のいずれか
+ * @returns {{ dot: string, label: string }}
+ */
+function statusLabel(status) {
+  switch (status) {
+    case CONSTANTS.STATUS.OK:    return { dot: '🟢', label: '正常' };
+    case CONSTANTS.STATUS.WARN:  return { dot: '🟡', label: '未確認' };
+    case CONSTANTS.STATUS.ALERT: return { dot: '🔴', label: '変更あり' };
+    default:                     return { dot: '⚪', label: '未監視' };
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ■ ユーティリティ関数
+   ══════════════════════════════════════════════════════════════════ */
+
+/**
+ * Date を「YYYY-MM-DD HH:mm:ss」形式の文字列に変換する
+ * @param {Date} date
+ * @returns {string}
+ */
+function formatDateTime(date) {
+  const pad = n => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ` +
+         `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
+
+/**
+ * ファイル名用に使える日時文字列を返す（コロンなし）
+ * @param {Date} date
+ * @returns {string}
+ */
+function formatDateTimeFile(date) {
+  return formatDateTime(date).replace(/[: ]/g, '-');
+}
+
+/**
+ * 長いURLを省略表示する（履歴テーブル用）
+ * @param {string} url
+ * @param {number} maxLen
+ * @returns {string}
+ */
+function shortenUrl(url, maxLen = 40) {
+  if (!url) return '';
+  return url.length > maxLen ? url.slice(0, maxLen) + '…' : url;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   レンダリング（既存ロジックを拡張）
+   ══════════════════════════════════════════════════════════════════ */
 function kanaSort(a, b) {
   const order = ['あ','い','う','え','お','か','き','く','け','こ',
                  'さ','し','す','せ','そ','た','ち','つ','て','と',
@@ -285,6 +1162,7 @@ function renderAll() {
   renderFilter();
   renderCards();
   updateBadge(false);
+  updateWatchSummary(); // ← 監視サマリーも更新
 }
 
 function renderFilter() {
@@ -306,7 +1184,7 @@ function renderFilter() {
 }
 
 function renderCards() {
-  const grid = document.getElementById('card-grid');
+  const grid   = document.getElementById('card-grid');
   const sorted = [...suppliers].sort(kanaSort);
   const filtered = activeKana === 'all' ? sorted : sorted.filter(s => s.kana === activeKana);
 
@@ -319,6 +1197,11 @@ function renderCards() {
     : `「${activeKana}」 ${filtered.length} 件`;
 }
 
+/**
+ * カードを生成する（監視ステータスバッジを追加）
+ * @param {Object} s - supplierデータ
+ * @returns {HTMLElement}
+ */
 function buildCard(s) {
   const div = document.createElement('div');
   div.className = 'card';
@@ -328,6 +1211,19 @@ function buildCard(s) {
     `<a href="${esc(l.url)}" target="_blank" class="${l.primary ? 'btn-primary' : 'btn-secondary'}">${esc(l.label)}</a>`
   ).join('');
 
+  // 監視ステータスを取得してバッジHTMLを生成
+  const watchInfo   = getSupplierWatchStatus(s);
+  const { dot, label } = statusLabel(watchInfo.status);
+  const dateStr     = watchInfo.checkedAt ? watchInfo.checkedAt : '';
+  const watchBadge  = `
+    <div class="watch-status ${watchInfo.status}">
+      <span class="watch-dot">${dot}</span>
+      <div class="watch-info">
+        <div>${label}</div>
+        ${dateStr ? `<div class="watch-info-date">${dateStr}</div>` : ''}
+      </div>
+    </div>`;
+
   div.innerHTML = `
     <div class="card-head">
       <span class="card-name">${esc(s.name)}</span>
@@ -335,6 +1231,7 @@ function buildCard(s) {
     </div>
     <p class="card-desc">${esc(s.desc)}</p>
     <div class="card-links">${linksHTML}</div>
+    ${watchBadge}
     <div class="card-actions">
       <button class="action-btn btn-edit-card" onclick="openEditModal(${s.id})">✏️ 編集</button>
       <button class="action-btn btn-del-card"  onclick="deleteCard(${s.id})">🗑 削除</button>
@@ -348,9 +1245,9 @@ function esc(str) {
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-/* ══════════════════════════════════════════════
-   モーダル
-   ══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════
+   モーダル（既存）
+   ══════════════════════════════════════════════════════════════════ */
 function openAddModal() {
   editingId = null;
   document.getElementById('modal-title').textContent = 'メーカー追加';
@@ -447,9 +1344,9 @@ function deleteCard(id) {
   showToast('削除しました');
 }
 
-/* ══════════════════════════════════════════════
-   保存・読込
-   ══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════
+   保存・読込（既存）
+   ══════════════════════════════════════════════════════════════════ */
 function updateBadge(unsaved) {
   const b = document.getElementById('save-badge');
   b.textContent = unsaved ? '⚠ 未保存の変更があります' : '✔ 保存済み';
@@ -503,30 +1400,34 @@ function handleImport(e) {
   reader.readAsText(file, 'utf-8');
 }
 
-/* ══════════════════════════════════════════════
-   Toast
-   ══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════
+   Toast（既存）
+   ══════════════════════════════════════════════════════════════════ */
 let toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-/* ══════════════════════════════════════════════
-   モーダル外クリックで閉じる
-   ══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════
+   モーダル外クリックで閉じる（既存 + 履歴モーダル対応を追加）
+   ══════════════════════════════════════════════════════════════════ */
 document.getElementById('modal-overlay').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
+document.getElementById('modal-history').addEventListener('click', function(e) {
+  if (e.target === this) closeHistoryModal();
+});
 
-/* ══════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════
    初期描画
-   ══════════════════════════════════════════════ */
-renderAll();
-updateBadge(false);
+   ══════════════════════════════════════════════════════════════════ */
+renderAll();       // カード・フィルター・バッジを描画
+updateBadge(false); // 「保存済み」バッジを初期化
+updateWatchSummary(); // 監視サマリーバーを初期化（データがあれば表示）
 </script>
 </body>
 </html>
