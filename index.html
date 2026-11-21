@@ -469,7 +469,7 @@
 <input type="file" id="file-input" accept=".json" style="display:none" onchange="handleImport(event)">
 
 <script>
-const STORAGE_KEY = 'supplier_catalog_v3';
+const STORAGE_KEY = 'supplier_catalog_v4';
 
 const KANA_ORDER = [
   'あ','い','う','え','お','か','き','く','け','こ',
@@ -529,131 +529,140 @@ const INIT_DATA = [
   { id:19, kana:"き", name:"キンボシ", desc:"（製品カタログ公開サイト）",
     links:[{label:"公式サイト",url:"https://golden-star.co.jp",primary:true},{label:"総合カタログPDF",url:"https://golden-star.co.jp/WPk1nb0sh1/wp-content/uploads/2025/12/kinboshi-catalog2026-2027_gs-2026-01.pdf",primary:false}] },
 
-  { id:20, kana:"こ", name:"工進", desc:"主な製品：噴霧器、エンジンポンプ、水中ポンプ",
+  { id:20, kana:"く", name:"グリーンフィールド", desc:"主な製品：ザバーン防草シート、リアリーターフ人工芝など",
+    links:[{label:"公式サイト",url:"https://gfield.co.jp/",primary:true}] },
+
+  { id:21, kana:"こ", name:"工進", desc:"主な製品：噴霧器、エンジンポンプ、水中ポンプ",
     links:[{label:"公式サイト",url:"https://www.koshin-ltd.jp/",primary:true}] },
 
   /* ─── さ行 ─── */
-  { id:21, kana:"さ", name:"サカタのタネ", desc:"主な製品：ホスカル（病害抵抗強化）、ホストップ（徒長防止・根はり強化）、ホスマグ（光合成促進、下葉の黄化防止）",
+  { id:22, kana:"さ", name:"サカタのタネ", desc:"主な製品：ホスカル（病害抵抗強化）、ホストップ（徒長防止・根はり強化）、ホスマグ（光合成促進、下葉の黄化防止）",
     links:[{label:"公式サイト",url:"https://sakataseed.co.jp",primary:true},{label:"Webカタログ",url:"https://sakata-netshop.com",primary:false}] },
-  { id:22, kana:"さ", name:"佐藤産業", desc:"主な製品：パイプハウス部品、ビニールハウス資材",
+  { id:23, kana:"さ", name:"佐藤産業", desc:"主な製品：パイプハウス部品、ビニールハウス資材",
     links:[{label:"公式サイト",url:"https://www.satoh-s.co.jp/",primary:true}] },
-  { id:23, kana:"さ", name:"三陽金属", desc:"主な製品：刈払機用チップソー、ナイロンカッター、自走式草刈機替刃",
+  { id:24, kana:"さ", name:"三陽金属", desc:"主な製品：刈払機用チップソー、ナイロンカッター、自走式草刈機替刃",
     links:[{label:"公式サイト",url:"https://www.sanyo-mt.co.jp/",primary:true}] },
-  { id:24, kana:"さ", name:"サンホープ", desc:"主な製品：スクリーンフィルター、ディスクフィルター、サンドフィルター",
+  { id:25, kana:"さ", name:"サンホープ", desc:"主な製品：スクリーンフィルター、ディスクフィルター、サンドフィルター",
     links:[{label:"公式サイト",url:"https://sunhope.com",primary:true},{label:"Webカタログ",url:"https://sunhope.com/products/index.html",primary:false}] },
-  { id:25, kana:"さ", name:"サンポリ", desc:"主な製品：楽育、水番（水田用給排水口）、アゼ板なみ、堆肥ワク、楽カル、仮設階段、サンクイ",
+  { id:26, kana:"さ", name:"サンポリ", desc:"主な製品：楽育、水番（水田用給排水口）、アゼ板なみ、堆肥ワク、楽カル、仮設階段、サンクイ",
     links:[{label:"公式サイト",url:"https://sunpoly.jp",primary:true},{label:"Webカタログ",url:"https://sunpoly.jp/products/products-contents/#nougyou",primary:false}] },
-  { id:26, kana:"さ", name:"住化アグリテック", desc:"主な製品：ミストエース、スミサンスイ、SNZファインフィルター、スミチャージN40/50",
+  { id:27, kana:"さ", name:"住化アグリテック", desc:"主な製品：ミストエース、スミサンスイ、SNZファインフィルター、スミチャージN40/50",
     links:[{label:"公式サイト",url:"https://sumika-agritech.co.jp",primary:true},{label:"Webカタログ",url:"https://sumika-agritech.co.jp",primary:false}] },
 
-  { id:27, kana:"し", name:"シーム", desc:"主な製品：しちゅうキャッチ、くきたっちアルファ、ゆーいんキャッチ、トップフック、ジョインホルダー",
+  { id:28, kana:"し", name:"シーム", desc:"主な製品：しちゅうキャッチ、くきたっちアルファ、ゆーいんキャッチ、トップフック、ジョインホルダー",
     links:[{label:"公式サイト",url:"https://seem.jp",primary:true},{label:"Webカタログ",url:"https://seem.jp/pdf/seem_catalog.pdf",primary:false}] },
-  { id:28, kana:"し", name:"株式会社シマダ", desc:"主な製品：捕虫器（ルイクス）、防虫・防鼠・鳥獣害対策資材",
+  { id:29, kana:"し", name:"株式会社シマダ", desc:"主な製品：捕虫器（ルイクス）、防虫・防鼠・鳥獣害対策資材",
     links:[{label:"公式サイト",url:"https://www.shimada-k.co.jp/",primary:true}] },
-  { id:29, kana:"し", name:"昭和ブリッジ販売", desc:"主な製品：アルミブリッジ、リヤカー",
+  { id:30, kana:"し", name:"昭和ブリッジ販売", desc:"主な製品：アルミブリッジ、リヤカー",
     links:[{label:"公式サイト",url:"https://www.showabridge.co.jp/",primary:true}] },
-  { id:30, kana:"し", name:"シンセイ", desc:"主な製品：園芸支柱イボ付、あぜシート押さえ、十字キャップ、アルミ三脚、アニマルフェンス",
+  { id:31, kana:"し", name:"シンセイ", desc:"主な製品：園芸支柱イボ付、あぜシート押さえ、十字キャップ、アルミ三脚、アニマルフェンス",
     links:[{label:"製品一覧ページ",url:"https://trading-shinsei.co.jp",primary:true}] },
-  { id:31, kana:"し", name:"シンワ", desc:"主な製品：デジタル温度計、ウォーキングメジャー、デジタル糖度計",
+  { id:32, kana:"し", name:"シンワ", desc:"主な製品：デジタル温度計、ウォーキングメジャー、デジタル糖度計",
     links:[{label:"公式サイト",url:"https://shinwasokutei.co.jp",primary:true},{label:"Webカタログ",url:"https://shinwasokutei.co.jp/catalog/japan/#page=1",primary:false}] },
 
-  { id:32, kana:"す", name:"スイコー", desc:"主な製品：スイコー活魚タンク、薬注タンク、除草剤タンク",
+  { id:33, kana:"す", name:"スイコー", desc:"主な製品：スイコー活魚タンク、薬注タンク、除草剤タンク",
     links:[{label:"公式サイト",url:"https://e-suiko.co.jp",primary:true},{label:"Webカタログ",url:"https://e-suiko.co.jp/catalog/",primary:false}] },
-  { id:33, kana:"す", name:"末松電子製作所", desc:"主な製品：電気柵（ゲッターシステム）",
+  { id:34, kana:"す", name:"末松電子製作所", desc:"主な製品：電気柵（ゲッターシステム）",
     links:[{label:"公式サイト",url:"https://www.suematsu-denshi.co.jp/",primary:true}] },
-  { id:34, kana:"す", name:"住友化学園芸", desc:"主な製品：殺虫・殺菌剤、園芸資材",
+  { id:35, kana:"す", name:"住友化学園芸", desc:"主な製品：殺虫・殺菌剤、園芸資材",
     links:[{label:"公式サイト",url:"https://www.sc-engei.co.jp/",primary:true}] },
-  { id:35, kana:"す", name:"株式会社 水空間", desc:"主な製品：散水・給水・配管資材、ホース・継手関連",
+  { id:36, kana:"す", name:"株式会社 水空間", desc:"主な製品：散水・給水・配管資材、ホース・継手関連",
     links:[{label:"公式サイト",url:"https://www.mizukukan.co.jp/",primary:true}] },
 
-  { id:36, kana:"せ", name:"誠和", desc:"主な製品：ハウス環境制御、誘引資材",
+  { id:37, kana:"せ", name:"誠和", desc:"主な製品：ハウス環境制御、誘引資材",
     links:[{label:"公式サイト",url:"https://www.seiwa-ltd.jp/",primary:true}] },
 
   /* ─── た行 ─── */
-  { id:37, kana:"た", name:"第一ビニール（DAIM）", desc:"主な製品：園芸支柱、菜園資材、防獣ネット関連",
+  { id:38, kana:"た", name:"第一ビニール（DAIM）", desc:"主な製品：園芸支柱、菜園資材、防獣ネット関連",
     links:[{label:"公式サイト",url:"https://www.daim-net.com/",primary:true}] },
-  { id:38, kana:"た", name:"大進（DAISHIN）", desc:"主な製品：園芸刃物、草刈り用品、センサーライト等",
+  { id:39, kana:"た", name:"大進（DAISHIN）", desc:"主な製品：園芸刃物、草刈り用品、センサーライト等",
     links:[{label:"公式サイト",url:"https://www.daishin-net.co.jp/",primary:true}] },
-  { id:39, kana:"た", name:"大成農材", desc:"主な製品：除草剤（サンフーロン）",
+  { id:40, kana:"た", name:"大成農材", desc:"主な製品：除草剤（サンフーロン）",
     links:[{label:"公式サイト",url:"https://www.taiseinozai.co.jp/",primary:true}] },
-  { id:40, kana:"た", name:"大仙", desc:"主な製品：農業用温室、アルミ温室、パイプハウス、ハウス関連資材",
+  { id:41, kana:"た", name:"大仙", desc:"主な製品：農業用温室、アルミ温室、パイプハウス、ハウス関連資材",
     links:[{label:"公式サイト",url:"https://www.daisen.co.jp/",primary:true}] },
-  { id:41, kana:"た", name:"タイガー", desc:"主な製品：電気柵（ボーダーショック）",
+  { id:42, kana:"た", name:"タイガー", desc:"主な製品：電気柵（ボーダーショック）",
     links:[{label:"公式サイト",url:"https://www.tiger-k.co.jp/",primary:true}] },
-  { id:42, kana:"た", name:"ダイヤテックス", desc:"主な製品：遮光ネット、防草シートなど",
+  { id:43, kana:"た", name:"ダイヤテックス", desc:"主な製品：遮光ネット、防草シートなど",
     links:[{label:"公式サイト",url:"https://www.diatex.co.jp/",primary:true}] },
-  { id:43, kana:"た", name:"宝計機製作所", desc:"主な製品：選別計量機（分太Ⅲ）",
+  { id:44, kana:"た", name:"タカショー", desc:"主な製品：ガーデニング・エクステリア資材、グリーン・園芸用品",
+    links:[{label:"公式サイト",url:"https://takasho.co.jp/",primary:true}] },
+  { id:45, kana:"た", name:"宝計機製作所", desc:"主な製品：選別計量機（分太Ⅲ）",
     links:[{label:"公式サイト",url:"https://www.takara-scale.co.jp/",primary:true}] },
-  { id:44, kana:"た", name:"多木化学", desc:"主な製品：肥料全般",
+  { id:46, kana:"た", name:"多木化学", desc:"主な製品：肥料全般",
     links:[{label:"公式サイト",url:"https://www.takichem.co.jp/",primary:true}] },
-  { id:45, kana:"た", name:"タキイ種苗", desc:"主な製品：種子、育苗培土、農業資材",
+  { id:47, kana:"た", name:"タキイ種苗", desc:"主な製品：種子、育苗培土、農業資材",
     links:[{label:"公式サイト",url:"https://www.takii.co.jp/",primary:true}] },
-  { id:46, kana:"た", name:"竹村電機製作所", desc:"主な製品：土壌酸度計（DM-5）",
+  { id:48, kana:"た", name:"竹村電機製作所", desc:"主な製品：土壌酸度計（DM-5）",
     links:[{label:"公式サイト",url:"https://www.takemura-denki.co.jp/",primary:true}] },
 
-  { id:47, kana:"ち", name:"近正（チカマサ）", desc:"主な製品：摘果鋏、収穫鋏",
+  { id:49, kana:"ち", name:"近正（チカマサ）", desc:"主な製品：摘果鋏、収穫鋏",
     links:[{label:"公式サイト",url:"https://www.chikamasa.co.jp/",primary:true}] },
 
-  { id:48, kana:"つ", name:"津村（津村鋼業）", desc:"主な製品：刈払機用チップソー、草刈用替刃、ガイドバー",
+  { id:50, kana:"つ", name:"津村（津村鋼業）", desc:"主な製品：刈払機用チップソー、草刈用替刃、ガイドバー",
     links:[{label:"公式サイト",url:"https://www.tsumura-kogyo.co.jp/",primary:true}] },
 
-  { id:49, kana:"と", name:"東都興業", desc:"主な製品：ハウス資材、巻上げ換気装置（カンキット）",
+  { id:51, kana:"と", name:"東都興業", desc:"主な製品：ハウス資材、巻上げ換気装置（カンキット）",
     links:[{label:"公式サイト",url:"https://www.toto-kogyo.co.jp/",primary:true}] },
 
   /* ─── な行 ─── */
-  { id:50, kana:"な", name:"中尾工業", desc:"",
+  { id:52, kana:"な", name:"中尾工業", desc:"",
     links:[{label:"公式サイト",url:"https://nakaokogyokk.com/index.html",primary:true}] },
-  { id:51, kana:"な", name:"南榮工業（ナンエイ）", desc:"主な製品：パイプハウス、菜園ハウス、パイプ車庫",
+  { id:53, kana:"な", name:"南榮工業（ナンエイ）", desc:"主な製品：パイプハウス、菜園ハウス、パイプ車庫",
     links:[{label:"公式サイト",url:"https://www.nan-a.co.jp/",primary:true}] },
 
-  { id:52, kana:"に", name:"日産化学", desc:"主な製品：除草剤（ラウンドアップ）など",
+  { id:54, kana:"に", name:"日産化学", desc:"主な製品：除草剤（ラウンドアップ）など",
     links:[{label:"公式サイト",url:"https://www.nissanchem.co.jp/",primary:true}] },
-  { id:53, kana:"に", name:"日本農薬", desc:"主な製品：農薬全般",
+  { id:55, kana:"に", name:"日本農薬", desc:"主な製品：農薬全般",
     links:[{label:"公式サイト",url:"https://www.nichino.co.jp/",primary:true}] },
-  { id:54, kana:"に", name:"日本ワイドクロス", desc:"主な製品：防虫ネット、防草シート、防風ネット",
+  { id:56, kana:"に", name:"日本ワイドクロス", desc:"主な製品：防虫ネット、防草シート、防風ネット",
     links:[{label:"公式サイト",url:"https://www.widecloth.co.jp/",primary:true}] },
 
-  { id:55, kana:"ね", name:"根岸産業", desc:"主な製品：如雨露、ハス口・こし網",
+  { id:57, kana:"ね", name:"根岸産業", desc:"主な製品：如雨露、ハス口・こし網",
     links:[{label:"公式サイト",url:"https://jorro.jp",primary:true},{label:"Webカタログ",url:"http://negishi-joro.co.jp",primary:false}] },
 
   /* ─── は行 ─── */
-  { id:56, kana:"は", name:"ハイポネックス", desc:"主な製品：ライゾー（根はり促進肥料）、ボンバルディア（有機活力液肥）、フォスビットK（亜リン酸液肥）",
+  { id:58, kana:"は", name:"ハイポネックス", desc:"主な製品：ライゾー（根はり促進肥料）、ボンバルディア（有機活力液肥）、フォスビットK（亜リン酸液肥）",
     links:[{label:"公式サイト",url:"https://hyponex.co.jp",primary:true},{label:"Webカタログ",url:"https://hyponex.co.jp/digital-book-list/",primary:false}] },
-  { id:57, kana:"は", name:"花ごころ", desc:"主な製品：高濃度フルボ酸活力液 T-1",
+  { id:59, kana:"は", name:"花ごころ", desc:"主な製品：高濃度フルボ酸活力液 T-1",
     links:[{label:"公式サイト",url:"https://hanagokoro.co.jp",primary:true}] },
-  { id:58, kana:"は", name:"ハラックス", desc:"主な製品：ウエラック、アルステップ、コン助ラック、グラコロ",
+  { id:60, kana:"は", name:"ハラックス", desc:"主な製品：ウエラック、アルステップ、コン助ラック、グラコロ",
     links:[{label:"公式サイト",url:"https://harax.co.jp",primary:true},{label:"Webカタログ",url:"https://harax.co.jp/catalogue2026/",primary:false}] },
 
-  { id:59, kana:"ひ", name:"美膳", desc:"主な製品：はこらく、水田用溝切機、米袋運搬台車、健苗ローラー、のぼレール",
+  { id:61, kana:"ひ", name:"美膳", desc:"主な製品：はこらく、水田用溝切機、米袋運搬台車、健苗ローラー、のぼレール",
     links:[{label:"公式サイト",url:"https://kk-bizen.jp",primary:true},{label:"Webカタログ",url:"https://kk-bizen.jp",primary:false}] },
-  { id:60, kana:"ひ", name:"広田産業", desc:"主な製品：みくに式種まき機、みくに式 散粒機５０",
+  { id:62, kana:"ひ", name:"広田産業", desc:"主な製品：みくに式種まき機、みくに式 散粒機５０",
     links:[{label:"公式サイト",url:"http://hirota-sangyo.co.jp",primary:true},{label:"Webカタログ",url:"https://ipros.com",primary:false}] },
 
-  { id:61, kana:"ふ", name:"福助", desc:"主な製品：ユニパック（0.04/0.08）、ディプロ 除菌 ウェットワイパー",
+  { id:63, kana:"ふ", name:"福助", desc:"主な製品：ユニパック（0.04/0.08）、ディプロ 除菌 ウェットワイパー",
     links:[{label:"公式サイト",url:"https://fukusuke-kogyo.co.jp",primary:true},{label:"Webカタログ",url:"https://fukusuke-kogyo.co.jp/products/web",primary:false}] },
-  { id:62, kana:"ふ", name:"フクトウ", desc:"みのるの部品表参考サイト",
+  { id:64, kana:"ふ", name:"フクトウ", desc:"みのるの部品表参考サイト",
     links:[{label:"みのる部品表",url:"https://fukutou.co.jp",primary:true}] },
 
-  { id:63, kana:"ほ", name:"豊稔企販", desc:"主な製品：鎌、鍬、光山作の打刃物",
+  { id:65, kana:"ほ", name:"豊稔企販", desc:"主な製品：鎌、鍬、光山作の打刃物",
     links:[{label:"公式サイト",url:"https://www.hounen.co.jp/",primary:true}] },
 
   /* ─── ま行 ─── */
-  { id:64, kana:"ま", name:"マックス", desc:"主な製品：結束機テープナー、光分解テープ、ステープル、ザクリオ",
+  { id:66, kana:"ま", name:"マックス", desc:"主な製品：結束機テープナー、光分解テープ、ステープル、ザクリオ",
     links:[{label:"公式サイト",url:"https://max-ltd.co.jp",primary:true},{label:"Webカタログ",url:"https://max-ltd.co.jp/support/download/af/catalog/",primary:false}] },
-  { id:65, kana:"ま", name:"マリンプラスチック", desc:"主な製品：フレコン、丸型くみたて槽、角型くみたて槽、フレキシブルコンテナ",
+  { id:67, kana:"ま", name:"マリンプラスチック", desc:"主な製品：フレコン、丸型くみたて槽、角型くみたて槽、フレキシブルコンテナ",
     links:[{label:"公式サイト",url:"https://n-m-p.net",primary:true},{label:"Webカタログ",url:"https://n-m-p.net",primary:false}] },
-  { id:66, kana:"ま", name:"丸山製作所", desc:"主な製品：動力噴霧機、刈払機",
+  { id:68, kana:"ま", name:"丸山製作所", desc:"主な製品：動力噴霧機、刈払機",
     links:[{label:"公式サイト",url:"https://www.maruyama.co.jp/",primary:true}] },
 
-  { id:67, kana:"み", name:"みのる産業", desc:"主な製品：ツッキー、もち切機、追肥機、ステッキ注入機、播種機、ハンドプランター",
+  { id:69, kana:"み", name:"みのる産業", desc:"主な製品：ツッキー、もち切機、追肥機、ステッキ注入機、播種機、ハンドプランター",
     links:[{label:"公式サイト",url:"https://agri-style.com",primary:true},{label:"取り扱い説明書",url:"https://agri-style.com",primary:false}] },
-  { id:68, kana:"み", name:"未来のアグリ", desc:"（製品カタログ情報）",
+  { id:70, kana:"み", name:"未来のアグリ", desc:"（製品カタログ情報）",
     links:[{label:"公式サイト",url:"https://mirai-no-agri.jp",primary:true},{label:"Webカタログ",url:"https://mirai-no-agri.jp/products/catalog/",primary:false}] },
 
+  /* ─── や行 ─── */
+  { id:71, kana:"ゆ", name:"株式会社YUASA", desc:"",
+    links:[{label:"公式サイト",url:"https://www.yuasa.co.jp/",primary:true}] },
+
   /* ─── わ行 ─── */
-  { id:69, kana:"わ", name:"渡辺藤吉本店", desc:"主な製品：農園芸資材、刃物、作業用品",
+  { id:72, kana:"わ", name:"渡辺藤吉本店", desc:"主な製品：農園芸資材、刃物、作業用品",
     links:[{label:"公式サイト",url:"https://www.watanabe-tokichi.co.jp/",primary:true}] },
-  { id:70, kana:"わ", name:"渡辺パイプ", desc:"主な製品：農業用ハウス、灌水資材全般",
+  { id:73, kana:"わ", name:"渡辺パイプ", desc:"主な製品：農業用ハウス、灌水資材全般",
     links:[{label:"公式サイト",url:"https://www.sedia-system.co.jp/",primary:true}] }
 ];
 
@@ -896,7 +905,7 @@ function deleteCard(id) {
   const target = suppliers.find(s => s.id === id);
   if (!target) return;
   if (!confirm(`「${target.name}」を削除しますか？`)) return;
-  suppliers = suppliers.filter(s => s.id === id);
+  suppliers = suppliers.filter(s => s.id !== id);
   persistData();
   renderAll();
   showToast('削除しました');
