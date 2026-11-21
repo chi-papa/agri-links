@@ -4,1174 +4,607 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>主要取引先カタログ一覧</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --cream:    #F5F0E8;
-    --cream-dk: #E8E0D0;
-    --brown:    #3D3428;
-    --brown-md: #5C4E3C;
-    --green:    #5C7A5C;
-    --green-dk: #3E5A3E;
-    --green-lt: #D4E4D4;
-    --accent:   #A0845C;
-    --accent-lt:#EAD9C4;
-    --text-sub: #7A6E60;
-    --border:   #D4CBBA;
-    --card-bg:  #FDFAF5;
-    --shadow:   rgba(61,52,40,0.07);
-    --danger:   #B94040;
-    --danger-lt:#F5E0E0;
-
-    /* ── 監視システム追加カラー（既存パレットと調和） ── */
-    --watch-ok:      #4A7C59;   /* 🟢 正常：緑系 */
-    --watch-ok-lt:   #D8EDDF;
-    --watch-warn:    #A07830;   /* 🟡 未確認：琥珀系 */
-    --watch-warn-lt: #F5EDD8;
-    --watch-alert:   #B94040;   /* 🔴 変更あり：赤系（既存dangerと統一） */
-    --watch-alert-lt:#F5E0E0;
-    --watch-none:    #9A9080;   /* ⚪ 監視未設定：グレー */
-    --watch-none-lt: #EDEAE4;
+    --bg:        #F7F5F0;
+    --surface:   #FFFFFF;
+    --surface-2: #F0ECE4;
+    --ink:       #2C2620;
+    --ink-sub:   #6E655B;
+    --border:    #DDD6C8;
+    --green:     #4A6B4A;
+    --green-dk:  #365236;
+    --green-lt:  #E7F0E7;
+    --accent:    #8C7355;
+    --danger:    #B54242;
+    --danger-lt: #F9EAEA;
+    --radius:    6px;
   }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--cream); color: var(--brown); font-family: 'Noto Sans JP', sans-serif; min-height: 100vh; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Meiryo", sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 
   /* ─── HEADER ─── */
-  .site-header { background: var(--brown); padding: 40px 24px 34px; text-align: center; position: relative; overflow: hidden; }
-  .site-header::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(45deg,transparent,transparent 28px,rgba(255,255,255,.025) 28px,rgba(255,255,255,.025) 29px); pointer-events:none; }
-  .header-label { display:inline-block; font-size:.72rem; letter-spacing:.18em; color:var(--accent); border:1px solid var(--accent); padding:3px 12px; border-radius:2px; margin-bottom:12px; font-family:'Noto Serif JP',serif; }
-  .site-header h1 { font-family:'Noto Serif JP',serif; font-weight:600; font-size:clamp(1.3rem,4vw,1.9rem); color:var(--cream); letter-spacing:.06em; margin-bottom:8px; }
-  .site-header p { color:var(--cream-dk); font-size:.85rem; letter-spacing:.04em; opacity:.8; }
-
-  /* ─── TOOLBAR ─── */
-  .toolbar { background: var(--brown-md); padding: 10px 20px; display: flex; justify-content: flex-end; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .toolbar-btn { cursor:pointer; padding:6px 16px; border-radius:4px; font-size:.8rem; font-family:'Noto Sans JP',sans-serif; font-weight:700; border:none; letter-spacing:.04em; transition:opacity .15s, transform .1s; }
-  .toolbar-btn:active { transform: scale(.97); }
-  .btn-add    { background: var(--green); color: #fff; }
-  .btn-add:hover { background: var(--green-dk); }
-  .btn-save   { background: var(--accent); color: #fff; }
-  .btn-save:hover { opacity:.88; }
-  .btn-import { background: var(--cream-dk); color: var(--brown); }
-  .btn-import:hover { opacity:.88; }
-  .save-badge { font-size:.72rem; color: var(--accent-lt); letter-spacing:.04em; opacity:.8; margin-right:auto; }
-
-  /* ── 監視ボタン（ツールバーに自然になじむスタイル） ── */
-  .toolbar-sep { width:1px; height:24px; background:rgba(255,255,255,.2); margin:0 2px; }
-  .btn-watch-start  { background: var(--watch-ok);    color: #fff; }
-  .btn-watch-start:hover { opacity:.85; }
-  .btn-watch-check  { background: var(--watch-warn);  color: #fff; }
-  .btn-watch-check:hover { opacity:.85; }
-  .btn-watch-hist   { background: var(--cream-dk);    color: var(--brown-md); }
-  .btn-watch-hist:hover { background: var(--cream); }
-
-  /* ─── DIVIDER ─── */
-  .divider { height:4px; background:linear-gradient(90deg,var(--green-dk),var(--green),var(--accent),var(--green),var(--green-dk)); }
-
-  /* ─── FILTER BAR ─── */
-  .filter-wrap { background:var(--brown); padding:12px 20px; position:sticky; top:0; z-index:100; border-bottom:1px solid rgba(255,255,255,.08); }
-  .filter-inner { max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
-  .filter-btn { cursor:pointer; padding:5px 14px; border-radius:3px; border:1px solid rgba(255,255,255,.2); font-size:.8rem; font-family:'Noto Sans JP',sans-serif; font-weight:500; background:transparent; color:var(--cream-dk); transition:background .15s,color .15s,border-color .15s; letter-spacing:.04em; }
-  .filter-btn:hover { background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.4); color:#fff; }
-  .filter-btn.active { background:var(--green); border-color:var(--green); color:#fff; }
-
-  /* ─── COUNT ─── */
-  .count-bar { max-width:1200px; margin:18px auto 6px; padding:0 20px; display:flex; align-items:center; gap:10px; }
-  .count-line { height:1px; flex:1; background:var(--border); }
-  .count-text { font-size:.78rem; color:var(--text-sub); letter-spacing:.05em; white-space:nowrap; }
-
-  /* ─── GRID ─── */
-  .card-grid { max-width:1200px; margin:0 auto 60px; padding:0 20px; display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
-
-  /* ─── CARD ─── */
-  .card { background:var(--card-bg); border:1px solid var(--border); border-radius:6px; padding:18px 18px 14px; display:flex; flex-direction:column; transition:transform .2s,box-shadow .2s,border-color .2s; position:relative; overflow:hidden; }
-  .card::before { content:''; position:absolute; top:0;left:0;right:0; height:3px; background:var(--green); opacity:0; transition:opacity .2s; }
-  .card:hover { transform:translateY(-3px); box-shadow:0 8px 24px var(--shadow); border-color:var(--green-lt); }
-  .card:hover::before { opacity:1; }
-  .card-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; gap:8px; }
-  .card-name { font-family:'Noto Serif JP',serif; font-size:1rem; font-weight:600; color:var(--brown); letter-spacing:.03em; line-height:1.3; }
-  .kana-badge { flex-shrink:0; background:var(--green); color:#fff; font-size:.72rem; font-weight:700; width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-top:1px; }
-  .card-desc { color:var(--text-sub); font-size:.8rem; line-height:1.65; flex-grow:1; margin-bottom:12px; border-left:2px solid var(--accent-lt); padding-left:10px; }
-  .card-links { display:grid; gap:7px; }
-  .btn-primary   { display:block; text-align:center; background:var(--green); color:#fff; border-radius:4px; padding:7px 10px; text-decoration:none; font-size:.8rem; font-weight:500; letter-spacing:.04em; transition:background .15s; }
-  .btn-primary:hover { background:var(--green-dk); }
-  .btn-secondary { display:block; text-align:center; background:transparent; color:var(--brown-md); border:1px solid var(--border); border-radius:4px; padding:6px 10px; text-decoration:none; font-size:.8rem; font-weight:500; letter-spacing:.04em; transition:background .15s,border-color .15s,color .15s; }
-  .btn-secondary:hover { background:var(--cream-dk); border-color:var(--accent); color:var(--brown); }
-
-  /* ─── カード編集ボタン群 ─── */
-  .card-actions { display:flex; gap:6px; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
-  .action-btn { flex:1; cursor:pointer; padding:5px; border-radius:4px; font-size:.75rem; font-weight:700; font-family:'Noto Sans JP',sans-serif; letter-spacing:.04em; transition:opacity .15s; }
-  .action-btn:active { opacity:.7; }
-  .btn-edit-card { background:var(--accent-lt); color:var(--accent); border:1px solid var(--accent); }
-  .btn-edit-card:hover { background:var(--accent); color:#fff; }
-  .btn-del-card  { background:var(--danger-lt); color:var(--danger); border:1px solid var(--danger); }
-  .btn-del-card:hover { background:var(--danger); color:#fff; }
-
-  /* ── 監視ステータスバッジ（カード内に追加） ── */
-  .watch-status {
+  .site-header {
+    background: var(--ink);
+    color: #F7F5F0;
+    padding: 24px 20px;
+  }
+  .header-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .site-header h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .header-actions {
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin-top: 8px;
-    padding: 5px 8px;
-    border-radius: 4px;
-    font-size: .72rem;
-    font-weight: 500;
-    letter-spacing: .03em;
-    border: 1px solid transparent;
+    gap: 8px;
+    flex-wrap: wrap;
   }
-  .watch-status.ok     { background: var(--watch-ok-lt);    color: var(--watch-ok);    border-color: #b8d8c0; }
-  .watch-status.warn   { background: var(--watch-warn-lt);  color: var(--watch-warn);  border-color: #d8c898; }
-  .watch-status.alert  { background: var(--watch-alert-lt); color: var(--watch-alert); border-color: #d8a8a8; }
-  .watch-status.none   { background: var(--watch-none-lt);  color: var(--watch-none);  border-color: #d0ccc4; }
-  .watch-dot { font-size: .8rem; }
-  .watch-info { flex: 1; line-height: 1.3; }
-  .watch-info-date { font-size: .68rem; opacity: .75; }
 
-  /* ─── MODAL OVERLAY ─── */
-  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(40,30,20,.55); z-index:200; align-items:center; justify-content:center; padding:20px; }
-  .modal-overlay.open { display:flex; }
-  .modal { background:var(--card-bg); border-radius:8px; padding:28px 28px 24px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.25); }
-  .modal h2 { font-family:'Noto Serif JP',serif; font-size:1.1rem; font-weight:600; color:var(--brown); margin-bottom:20px; padding-bottom:12px; border-bottom:1px solid var(--border); }
-  .form-row { margin-bottom:14px; }
-  .form-row label { display:block; font-size:.78rem; font-weight:700; color:var(--brown-md); margin-bottom:5px; letter-spacing:.04em; }
-  .form-row input, .form-row textarea { width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:4px; font-size:.85rem; font-family:'Noto Sans JP',sans-serif; background:var(--cream); color:var(--brown); outline:none; transition:border-color .15s; }
-  .form-row input:focus, .form-row textarea:focus { border-color:var(--green); }
-  .form-row textarea { resize:vertical; min-height:70px; line-height:1.6; }
-  .form-hint { font-size:.72rem; color:var(--text-sub); margin-top:4px; }
-  .link-group { background:var(--cream); border:1px solid var(--border); border-radius:6px; padding:12px 14px; margin-bottom:10px; position:relative; }
-  .link-group-title { font-size:.75rem; font-weight:700; color:var(--text-sub); margin-bottom:8px; letter-spacing:.06em; }
-  .btn-rm-link { position:absolute; top:10px; right:10px; cursor:pointer; background:var(--danger-lt); color:var(--danger); border:1px solid var(--danger); border-radius:3px; font-size:.7rem; padding:2px 8px; font-family:'Noto Sans JP',sans-serif; }
-  .btn-rm-link:hover { background:var(--danger); color:#fff; }
-  .btn-add-link { cursor:pointer; background:transparent; color:var(--green-dk); border:1px dashed var(--green); border-radius:4px; padding:6px; width:100%; font-size:.78rem; font-family:'Noto Sans JP',sans-serif; font-weight:500; margin-top:4px; transition:background .15s; }
-  .btn-add-link:hover { background:var(--green-lt); }
-  .modal-footer { display:flex; justify-content:flex-end; gap:8px; margin-top:20px; padding-top:16px; border-top:1px solid var(--border); }
-  .btn-cancel { cursor:pointer; padding:8px 20px; border-radius:4px; border:1px solid var(--border); background:transparent; color:var(--brown-md); font-size:.85rem; font-family:'Noto Sans JP',sans-serif; font-weight:500; }
-  .btn-cancel:hover { background:var(--cream-dk); }
-  .btn-confirm { cursor:pointer; padding:8px 24px; border-radius:4px; border:none; background:var(--green); color:#fff; font-size:.85rem; font-family:'Noto Sans JP',sans-serif; font-weight:700; transition:background .15s; }
-  .btn-confirm:hover { background:var(--green-dk); }
+  /* ─── BUTTONS ─── */
+  .btn {
+    cursor: pointer;
+    border: none;
+    border-radius: var(--radius);
+    padding: 7px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    font-family: inherit;
+    transition: background 0.15s, opacity 0.15s;
+  }
+  .btn-add {
+    background: var(--green);
+    color: #fff;
+  }
+  .btn-add:hover { background: var(--green-dk); }
+  .btn-ghost {
+    background: rgba(255,255,255,0.12);
+    color: #F7F5F0;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.22); }
+
+  /* ─── FILTER BAR ─── */
+  .filter-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 10px 20px;
+  }
+  .filter-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+  .filter-btn {
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--ink-sub);
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    font-family: inherit;
+    font-weight: 500;
+    transition: all 0.12s;
+  }
+  .filter-btn:hover {
+    border-color: var(--green);
+    color: var(--ink);
+  }
+  .filter-btn.active {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+  .count-text {
+    margin-left: auto;
+    font-size: 0.78rem;
+    color: var(--ink-sub);
+  }
+
+  /* ─── MAIN GRID ─── */
+  .card-grid {
+    max-width: 1160px;
+    width: 100%;
+    margin: 24px auto 48px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 16px;
+    flex: 1;
+  }
+
+  /* ─── CARD ─── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 4px 14px rgba(44, 38, 32, 0.06);
+  }
+  .card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .card-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .kana-badge {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--green-lt);
+    color: var(--green-dk);
+    font-size: 0.74rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-name {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .card-tools {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .icon-btn {
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.72rem;
+    color: var(--ink-sub);
+    font-family: inherit;
+    transition: all 0.12s;
+  }
+  .icon-btn:hover {
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+  .icon-btn.del:hover {
+    background: var(--danger-lt);
+    color: var(--danger);
+  }
+
+  .card-desc {
+    font-size: 0.8rem;
+    color: var(--ink-sub);
+    margin-bottom: 14px;
+    flex: 1;
+    line-height: 1.6;
+  }
+  .card-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .link-btn {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px;
+    padding: 7px 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .link-btn.primary {
+    background: var(--green);
+    color: #fff;
+  }
+  .link-btn.primary:hover { background: var(--green-dk); }
+  .link-btn.secondary {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--border);
+  }
+  .link-btn.secondary:hover {
+    background: var(--surface-2);
+    border-color: var(--accent);
+  }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(30, 25, 20, 0.5);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 24px;
+    width: 100%;
+    max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+  }
+  .modal h2 {
+    font-size: 1.05rem;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-row { margin-bottom: 14px; }
+  .form-row-inline {
+    display: grid;
+    grid-template-columns: 1fr 110px;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .form-row label, .form-row-inline label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-sub);
+    margin-bottom: 4px;
+  }
+  .req { color: var(--danger); }
+  input[type="text"], input[type="url"], select, textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    background: var(--bg);
+    color: var(--ink);
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--green);
+    background: #fff;
+  }
+  textarea { resize: vertical; min-height: 68px; }
+
+  .link-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  .link-item-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .link-item-title {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--ink-sub);
+  }
+  .preset-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+  .preset-chip {
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink-sub);
+    border-radius: 3px;
+    padding: 2px 7px;
+    font-size: 0.7rem;
+    font-family: inherit;
+  }
+  .preset-chip:hover {
+    border-color: var(--green);
+    color: var(--green-dk);
+  }
+  .btn-rm-link {
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--danger);
+    font-size: 0.72rem;
+    font-family: inherit;
+    font-weight: 600;
+  }
+  .btn-add-link {
+    cursor: pointer;
+    width: 100%;
+    padding: 7px;
+    border: 1px dashed var(--green);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--green-dk);
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: inherit;
+  }
+  .btn-add-link:hover { background: var(--green-lt); }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .btn-cancel {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--ink-sub);
+  }
+  .btn-cancel:hover { background: var(--surface-2); }
 
   /* ─── TOAST ─── */
-  .toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--brown); color:var(--cream); padding:10px 24px; border-radius:6px; font-size:.82rem; letter-spacing:.04em; opacity:0; transition:opacity .3s,transform .3s; pointer-events:none; z-index:300; white-space:nowrap; }
-  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(16px);
+    background: var(--ink);
+    color: #fff;
+    padding: 9px 20px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+    z-index: 300;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 
   /* ─── FOOTER ─── */
-  .site-footer { background:var(--brown); color:var(--cream-dk); text-align:center; padding:18px; font-size:.75rem; letter-spacing:.04em; opacity:.75; }
-
-  /* ══ 監視モーダル（既存モーダルと統一スタイル） ══ */
-  /* 監視履歴モーダル */
-  .modal-wide { max-width: 800px; }
-  .hist-toolbar { display:flex; justify-content:flex-end; gap:8px; margin-bottom:14px; }
-  .hist-table-wrap { overflow-x:auto; max-height:460px; overflow-y:auto; border:1px solid var(--border); border-radius:6px; }
-  table.hist-table { width:100%; border-collapse:collapse; font-size:.78rem; }
-  table.hist-table th {
-    position: sticky; top: 0;
-    background: var(--brown-md); color: var(--cream);
-    padding: 8px 10px; text-align: left;
-    font-size: .72rem; letter-spacing: .05em;
-    white-space: nowrap;
+  .site-footer {
+    text-align: center;
+    padding: 16px;
+    font-size: 0.74rem;
+    color: var(--ink-sub);
+    border-top: 1px solid var(--border);
+    background: var(--surface);
   }
-  table.hist-table td { padding:7px 10px; border-bottom:1px solid var(--border); vertical-align:top; word-break:break-all; }
-  table.hist-table tr:last-child td { border-bottom:none; }
-  table.hist-table tr:nth-child(even) td { background: rgba(212,203,186,.15); }
-  .change-type-badge {
-    display:inline-block; padding:2px 7px; border-radius:3px;
-    font-size:.68rem; font-weight:700; letter-spacing:.04em;
-  }
-  .badge-size     { background:var(--accent-lt);       color:var(--accent); }
-  .badge-modified { background:var(--watch-warn-lt);   color:var(--watch-warn); }
-  .badge-etag     { background:var(--green-lt);         color:var(--green-dk); }
-  .badge-new      { background:var(--watch-none-lt);   color:var(--watch-none); }
-  .hist-empty { text-align:center; padding:32px; color:var(--text-sub); font-size:.85rem; }
-
-  /* 監視進捗インジケーター */
-  .watch-progress-bar {
-    height: 3px;
-    background: var(--green-lt);
-    position: relative;
-    overflow: hidden;
-    border-radius: 2px;
-    margin-top: 10px;
-    display: none;
-  }
-  .watch-progress-bar.active { display: block; }
-  .watch-progress-inner {
-    position: absolute; top: 0; left: -40%;
-    width: 40%; height: 100%;
-    background: linear-gradient(90deg, transparent, var(--green), transparent);
-    animation: waveSlide 1.2s linear infinite;
-  }
-  @keyframes waveSlide { to { left: 100%; } }
-
-  /* 監視サマリーバー */
-  .watch-summary-bar {
-    max-width:1200px; margin:0 auto 0;
-    padding:8px 20px;
-    display: none; /* 監視データがある場合のみ表示 */
-    gap: 16px;
-    align-items: center;
-    flex-wrap: wrap;
-    font-size: .78rem;
-  }
-  .watch-summary-bar.visible { display: flex; }
-  .watch-sum-item { display:flex; align-items:center; gap:5px; }
-  .watch-sum-dot { width:8px; height:8px; border-radius:50%; }
-  .ws-ok    { background: var(--watch-ok); }
-  .ws-warn  { background: var(--watch-warn); }
-  .ws-alert { background: var(--watch-alert); }
-  .watch-sum-label { color: var(--text-sub); }
-  .watch-sum-count { font-weight:700; color: var(--brown); }
-  .watch-sum-last  { margin-left:auto; color:var(--text-sub); font-size:.72rem; }
 </style>
 </head>
 <body>
 
-<!-- ─── HEADER ─── -->
 <header class="site-header">
-  <div class="header-label">SUPPLIER CATALOG</div>
-  <h1>主要取引先カタログ一覧</h1>
-  <p>農業資材メーカーの公式サイト・Webカタログへすぐにアクセスできます</p>
+  <div class="header-inner">
+    <h1>主要取引先カタログ一覧</h1>
+    <div class="header-actions">
+      <button class="btn btn-add" onclick="openAddModal()">＋ メーカー追加</button>
+      <button class="btn btn-ghost" onclick="exportJson()">JSON書き出し</button>
+      <button class="btn btn-ghost" onclick="triggerImport()">JSON読込</button>
+    </div>
+  </div>
 </header>
-<div class="divider"></div>
 
-<!-- ─── TOOLBAR ─── -->
-<div class="toolbar">
-  <span class="save-badge" id="save-badge">未保存の変更があります</span>
-  <button class="toolbar-btn btn-import" onclick="importData()">📂 データ読込</button>
-  <button class="toolbar-btn btn-add"  onclick="openAddModal()">＋ メーカー追加</button>
-  <button class="toolbar-btn btn-save" onclick="saveData()">💾 保存（HTMLとして）</button>
-
-  <!-- ── セパレーター ── -->
-  <div class="toolbar-sep"></div>
-
-  <!-- ── 監視システムボタン（既存ボタンと並べて追加） ── -->
-  <button class="toolbar-btn btn-watch-start" id="btn-watch-start" onclick="watchStart()">👁 監視スタート</button>
-  <button class="toolbar-btn btn-watch-check" onclick="watchCheckChanges()">🔍 変更確認</button>
-  <button class="toolbar-btn btn-watch-hist"  onclick="openHistoryModal()">📜 履歴</button>
-</div>
-
-<!-- ── 監視進捗バー（監視実行中に表示） ── -->
-<div class="watch-progress-bar" id="watch-progress">
-  <div class="watch-progress-inner"></div>
-</div>
-
-<!-- ─── FILTER BAR ─── -->
-<div class="filter-wrap" aria-label="頭文字フィルター">
+<nav class="filter-bar" aria-label="五十音フィルター">
   <div class="filter-inner" id="kana-filter"></div>
-</div>
+</nav>
 
-<!-- ── 監視サマリーバー（監視データがある場合のみ表示） ── -->
-<div class="watch-summary-bar" id="watch-summary-bar">
-  <span style="font-size:.72rem; color:var(--text-sub); letter-spacing:.06em; font-weight:700;">監視状況：</span>
-  <div class="watch-sum-item">
-    <div class="watch-sum-dot ws-ok"></div>
-    <span class="watch-sum-label">正常</span>
-    <span class="watch-sum-count" id="ws-ok-count">0</span>
-  </div>
-  <div class="watch-sum-item">
-    <div class="watch-sum-dot ws-warn"></div>
-    <span class="watch-sum-label">未確認</span>
-    <span class="watch-sum-count" id="ws-warn-count">0</span>
-  </div>
-  <div class="watch-sum-item">
-    <div class="watch-sum-dot ws-alert"></div>
-    <span class="watch-sum-label">変更あり</span>
-    <span class="watch-sum-count" id="ws-alert-count">0</span>
-  </div>
-  <span class="watch-sum-last" id="ws-last-check"></span>
-</div>
-
-<div class="count-bar">
-  <div class="count-line"></div>
-  <span class="count-text" id="count-label"></span>
-  <div class="count-line"></div>
-</div>
-
-<!-- ─── GRID ─── -->
 <main class="card-grid" id="card-grid"></main>
 
-<footer class="site-footer">© 主要取引先カタログ一覧</footer>
+<footer class="site-footer">主要取引先カタログ一覧（ブラウザ自動保存対応）</footer>
 
-<!-- ─── MODAL：メーカー追加／編集（既存） ─── -->
+<!-- モーダル：メーカー追加／編集 -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal">
     <h2 id="modal-title">メーカー追加</h2>
-    <div class="form-row">
-      <label>会社名 <span style="color:var(--danger)">*</span></label>
-      <input type="text" id="f-name" placeholder="例：サカタのタネ">
+    <div class="form-row-inline">
+      <div>
+        <label for="f-name">会社名 <span class="req">*</span></label>
+        <input type="text" id="f-name" placeholder="例：サカタのタネ">
+      </div>
+      <div>
+        <label for="f-kana">頭文字 <span class="req">*</span></label>
+        <select id="f-kana"></select>
+      </div>
     </div>
     <div class="form-row">
-      <label>頭文字（ひらがな1文字）<span style="color:var(--danger)">*</span></label>
-      <input type="text" id="f-kana" maxlength="1" placeholder="例：さ" style="width:80px">
-      <div class="form-hint">五十音フィルターに使用します</div>
+      <label for="f-desc">主な製品・メモ</label>
+      <textarea id="f-desc" placeholder="例：主な製品：ホスカル、ホストップ"></textarea>
     </div>
     <div class="form-row">
-      <label>主な製品・説明</label>
-      <textarea id="f-desc" placeholder="例：主な製品：ホスカル（病害抵抗強化）、ホストップ（徒長防止）"></textarea>
-    </div>
-    <div class="form-row">
-      <label>リンク</label>
+      <label>リンク <span class="req">*</span></label>
       <div id="link-list"></div>
-      <button class="btn-add-link" onclick="addLinkRow()">＋ リンクを追加</button>
-      <div class="form-hint">ボタンラベルとURLをセットで入力してください</div>
+      <button type="button" class="btn-add-link" onclick="addLinkRow()">＋ リンクを追加</button>
     </div>
     <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeModal()">キャンセル</button>
-      <button class="btn-confirm" onclick="confirmModal()">保存</button>
+      <button type="button" class="btn btn-cancel" onclick="closeModal()">キャンセル</button>
+      <button type="button" class="btn btn-add" onclick="confirmModal()">保存</button>
     </div>
   </div>
 </div>
 
-<!-- ─── MODAL：監視履歴（新規追加） ─── -->
-<div class="modal-overlay" id="modal-history">
-  <div class="modal modal-wide">
-    <h2>📜 監視変更履歴</h2>
-    <div class="hist-toolbar">
-      <button class="toolbar-btn btn-import" onclick="exportHistoryJson()">⬇ JSONエクスポート</button>
-      <button class="toolbar-btn btn-del-card" style="padding:6px 16px; font-size:.8rem;" onclick="clearHistory()">🗑 履歴クリア</button>
-      <button class="btn-cancel" onclick="closeHistoryModal()">閉じる</button>
-    </div>
-    <div class="hist-table-wrap" id="hist-table-wrap">
-      <!-- JSで動的生成 -->
-    </div>
-  </div>
-</div>
-
-<!-- ─── TOAST ─── -->
 <div class="toast" id="toast"></div>
-
-<!-- ─── HIDDEN FILE INPUT ─── -->
-<input type="file" id="file-input" accept=".html" style="display:none" onchange="handleImport(event)">
+<input type="file" id="file-input" accept=".json" style="display:none" onchange="handleImport(event)">
 
 <script>
-/* ══════════════════════════════════════════════════════════════════
-   初期データ（埋め込み）
-   ══════════════════════════════════════════════════════════════════ */
+const STORAGE_KEY = 'supplier_catalog_v2';
+
+const KANA_ORDER = [
+  'あ','い','う','え','お','か','き','く','け','こ',
+  'さ','し','す','せ','そ','た','ち','つ','て','と',
+  'な','に','ぬ','ね','の','は','ひ','ふ','へ','ほ',
+  'ま','み','む','め','も','や','ゆ','よ',
+  'ら','り','る','れ','ろ','わ'
+];
+
+const LINK_PRESETS = ['公式サイト', 'Webカタログ', 'PDFカタログ', '製品一覧'];
+
 const INIT_DATA = [
-  { id:1,  kana:"あ", name:"アキレス",       desc:"主な製品：ファインシェード（ハウス用遮光剤）、ファインシェード除去剤",
+  { id:1,  kana:"あ", name:"アキレス", desc:"主な製品：ファインシェード（ハウス用遮光剤）、ファインシェード除去剤",
     links:[{label:"公式サイト",url:"https://achilles.jp",primary:true},{label:"Webカタログ",url:"https://achilles.jp",primary:false}] },
-  { id:2,  kana:"あ", name:"安全興業",       desc:"主な製品：採集コンテナ、あぜ板、雨水タンク、砂利どめーる",
+  { id:2,  kana:"あ", name:"安全興業", desc:"主な製品：採集コンテナ、あぜ板、雨水タンク、砂利どめーる",
     links:[{label:"公式サイト",url:"https://anzenkogyo.com",primary:true},{label:"Webカタログ",url:"https://anzenkogyo.com",primary:false}] },
-  { id:3,  kana:"い", name:"一色本店",       desc:"主な製品：トルシーシリーズ（鮮やかな色で害虫を引きつけて捕獲、抵抗性のある虫にも効果的）",
+  { id:3,  kana:"い", name:"一色本店", desc:"主な製品：トルシーシリーズ（鮮やかな色で害虫を引きつけて捕獲、抵抗性のある虫にも効果的）",
     links:[{label:"公式サイト",url:"https://a117.co.jp",primary:true},{label:"Webカタログ",url:"https://a117.co.jp/%E8%87%AA%E7%A4%BE%E8%A3%BD%E5%93%81/%E3%83%AA%E3%83%BC%E3%83%95%E3%83%AC%E3%83%83%E3%83%88/%E7%B7%8F%E5%90%88%E3%82%AB%E3%82%BF%E3%83%AD%E3%82%B0-vol.8.pdf",primary:false}] },
   { id:4,  kana:"い", name:"岩谷マテリアル", desc:"（※今後データが追加されます）",
     links:[{label:"製品紹介ページ",url:"https://imcjpn.co.jp",primary:true}] },
-  { id:5,  kana:"う", name:"槍木産業",       desc:"主な製品：黒丸君、植えまき君、ヘアピン杭、小型マキトール、マルチパートナー",
+  { id:5,  kana:"う", name:"槍木産業", desc:"主な製品：黒丸君、植えまき君、ヘアピン杭、小型マキトール、マルチパートナー",
     links:[{label:"主要製品ページ",url:"https://utsugi-industry.net",primary:true}] },
-  { id:6,  kana:"え", name:"MKVアドバンス",  desc:"主な製品：エバフロー、キリコ、スソピー、パオパオ、ダイヤスター、カエルーチ",
+  { id:6,  kana:"え", name:"MKVアドバンス", desc:"主な製品：エバフロー、キリコ、スソピー、パオパオ、ダイヤスター、カエルーチ",
     links:[{label:"カタログDLページ",url:"https://mkv-a.co.jp",primary:true},{label:"総合カタログPDF",url:"https://mkv-a.co.jp",primary:false}] },
-  { id:7,  kana:"お", name:"OATアグリオ",   desc:"主な製品：サンピ833neo（葉面散布用肥料）、ホスプラス（亜リン酸液肥）、炎天マスター",
+  { id:7,  kana:"お", name:"OATアグリオ", desc:"主な製品：サンピ833neo（葉面散布用肥料）、ホスプラス（亜リン酸液肥）、炎天マスター",
     links:[{label:"製品案内",url:"https://oat-agrio.co.jp",primary:true},{label:"Webチラシ",url:"https://oat-agrio.co.jp#product_list_area",primary:false}] },
-  { id:8,  kana:"お", name:"オギハラ工業",   desc:"主な製品：クリーントーミ（F1手動式、F2モーター式、F3モーター式可変）、クリーンクリーナー（苗箱洗浄）",
+  { id:8,  kana:"お", name:"オギハラ工業", desc:"主な製品：クリーントーミ（F1手動式、F2モーター式、F3モーター式可変）、クリーンクリーナー（苗箱洗浄）",
     links:[{label:"製品情報",url:"https://welcome-ogihara.com",primary:true},{label:"カタログ情報",url:"https://welcome-ogihara.com",primary:false}] },
-  { id:9,  kana:"か", name:"環境技研",       desc:"主な製品：米ガード、米ガードミニ",
+  { id:9,  kana:"か", name:"環境技研", desc:"主な製品：米ガード、米ガードミニ",
     links:[{label:"公式サイト",url:"https://kankyou-giken.com",primary:true}] },
-  { id:10, kana:"き", name:"貴志金物",       desc:"（製品情報確認中）",
+  { id:10, kana:"き", name:"貴志金物", desc:"（製品情報確認中）",
     links:[{label:"公式サイト",url:"https://kishikk.com",primary:true}] },
-  { id:11, kana:"き", name:"キュウホー",     desc:"主な製品：魔法のカルチ（手押し式除草機）、新魔法のカルチ",
+  { id:11, kana:"き", name:"キュウホー", desc:"主な製品：魔法のカルチ（手押し式除草機）、新魔法のカルチ",
     links:[{label:"製品・サービス",url:"https://q-hoe.com",primary:true},{label:"Webカタログ",url:"https://q-hoe.com",primary:false}] },
-  { id:12, kana:"き", name:"キンボシ",       desc:"（製品カタログ公開サイト）",
+  { id:12, kana:"き", name:"キンボシ", desc:"（製品カタログ公開サイト）",
     links:[{label:"公式サイト",url:"https://golden-star.co.jp",primary:true},{label:"総合カタログPDF",url:"https://golden-star.co.jp/WPk1nb0sh1/wp-content/uploads/2025/12/kinboshi-catalog2026-2027_gs-2026-01.pdf",primary:false}] },
-  { id:13, kana:"さ", name:"サカタのタネ",   desc:"主な製品：ホスカル（病害抵抗強化）、ホストップ（徒長防止・根はり強化）、ホスマグ（光合成促進、下葉の黄化防止）",
+  { id:13, kana:"さ", name:"サカタのタネ", desc:"主な製品：ホスカル（病害抵抗強化）、ホストップ（徒長防止・根はり強化）、ホスマグ（光合成促進、下葉の黄化防止）",
     links:[{label:"公式サイト",url:"https://sakataseed.co.jp",primary:true},{label:"Webカタログ",url:"https://sakata-netshop.com",primary:false}] },
-  { id:14, kana:"さ", name:"住化アグリテック",desc:"主な製品：ミストエース、スミサンスイ、SNZファインフィルター、スミチャージN40/50",
+  { id:14, kana:"さ", name:"住化アグリテック", desc:"主な製品：ミストエース、スミサンスイ、SNZファインフィルター、スミチャージN40/50",
     links:[{label:"公式サイト",url:"https://sumika-agritech.co.jp",primary:true},{label:"Webカタログ",url:"https://sumika-agritech.co.jp",primary:false}] },
-  { id:15, kana:"さ", name:"サンポリ",       desc:"主な製品：楽育、水番（水田用給排水口）、アゼ板なみ、堆肥ワク、楽カル、仮設階段、サンクイ",
+  { id:15, kana:"さ", name:"サンポリ", desc:"主な製品：楽育、水番（水田用給排水口）、アゼ板なみ、堆肥ワク、楽カル、仮設階段、サンクイ",
     links:[{label:"公式サイト",url:"https://sunpoly.jp",primary:true},{label:"Webカタログ",url:"https://sunpoly.jp/products/products-contents/#nougyou",primary:false}] },
-  { id:16, kana:"さ", name:"サンホープ",     desc:"主な製品：スクリーンフィルター、ディスクフィルター、サンドフィルター",
+  { id:16, kana:"さ", name:"サンホープ", desc:"主な製品：スクリーンフィルター、ディスクフィルター、サンドフィルター",
     links:[{label:"公式サイト",url:"https://sunhope.com",primary:true},{label:"Webカタログ",url:"https://sunhope.com/products/index.html",primary:false}] },
-  { id:17, kana:"し", name:"シーム",         desc:"主な製品：しちゅうキャッチ、くきたっちアルファ、ゆーいんキャッチ、トップフック、ジョインホルダー",
+  { id:17, kana:"し", name:"シーム", desc:"主な製品：しちゅうキャッチ、くきたっちアルファ、ゆーいんキャッチ、トップフック、ジョインホルダー",
     links:[{label:"公式サイト",url:"https://seem.jp",primary:true},{label:"Webカタログ",url:"https://seem.jp/pdf/seem_catalog.pdf",primary:false}] },
-  { id:18, kana:"し", name:"シンワ",         desc:"主な製品：デジタル温度計、ウォーキングメジャー、デジタル糖度計",
+  { id:18, kana:"し", name:"シンワ", desc:"主な製品：デジタル温度計、ウォーキングメジャー、デジタル糖度計",
     links:[{label:"公式サイト",url:"https://shinwasokutei.co.jp",primary:true},{label:"Webカタログ",url:"https://shinwasokutei.co.jp/catalog/japan/#page=1",primary:false}] },
-  { id:19, kana:"し", name:"シンセイ",       desc:"主な製品：園芸支柱イボ付、あぜシート押さえ、十字キャップ、アルミ三脚、アニマルフェンス",
+  { id:19, kana:"し", name:"シンセイ", desc:"主な製品：園芸支柱イボ付、あぜシート押さえ、十字キャップ、アルミ三脚、アニマルフェンス",
     links:[{label:"製品一覧ページ",url:"https://trading-shinsei.co.jp",primary:true}] },
-  { id:20, kana:"す", name:"スイコー",       desc:"主な製品：スイコー活魚タンク、薬注タンク、除草剤タンク",
+  { id:20, kana:"す", name:"スイコー", desc:"主な製品：スイコー活魚タンク、薬注タンク、除草剤タンク",
     links:[{label:"公式サイト",url:"https://e-suiko.co.jp",primary:true},{label:"Webカタログ",url:"https://e-suiko.co.jp/catalog/",primary:false}] },
-  { id:21, kana:"ね", name:"根岸産業",       desc:"主な製品：如雨露、ハス口・こし網",
+  { id:21, kana:"な", name:"中尾工業", desc:"",
+    links:[{label:"公式サイト",url:"https://nakaokogyokk.com/index.html",primary:true}] },
+  { id:22, kana:"ね", name:"根岸産業", desc:"主な製品：如雨露、ハス口・こし網",
     links:[{label:"公式サイト",url:"https://jorro.jp",primary:true},{label:"Webカタログ",url:"http://negishi-joro.co.jp",primary:false}] },
-  { id:22, kana:"は", name:"ハイポネックス",  desc:"主な製品：ライゾー（根はり促進肥料）、ボンバルディア（有機活力液肥）、フォスビットK（亜リン酸液肥）",
+  { id:23, kana:"は", name:"ハイポネックス", desc:"主な製品：ライゾー（根はり促進肥料）、ボンバルディア（有機活力液肥）、フォスビットK（亜リン酸液肥）",
     links:[{label:"公式サイト",url:"https://hyponex.co.jp",primary:true},{label:"Webカタログ",url:"https://hyponex.co.jp/digital-book-list/",primary:false}] },
-  { id:23, kana:"は", name:"花ごころ",       desc:"主な製品：高濃度フルボ酸活力液 T-1",
+  { id:24, kana:"は", name:"花ごころ", desc:"主な製品：高濃度フルボ酸活力液 T-1",
     links:[{label:"公式サイト",url:"https://hanagokoro.co.jp",primary:true}] },
-  { id:24, kana:"は", name:"ハラックス",     desc:"主な製品：ウエラック、アルステップ、コン助ラック、グラコロ",
+  { id:25, kana:"は", name:"ハラックス", desc:"主な製品：ウエラック、アルステップ、コン助ラック、グラコロ",
     links:[{label:"公式サイト",url:"https://harax.co.jp",primary:true},{label:"Webカタログ",url:"https://harax.co.jp/catalogue2026/",primary:false}] },
-  { id:25, kana:"ひ", name:"美膳",           desc:"主な製品：はこらく、水田用溝切機、米袋運搬台車、健苗ローラー、のぼレール",
+  { id:26, kana:"ひ", name:"美膳", desc:"主な製品：はこらく、水田用溝切機、米袋運搬台車、健苗ローラー、のぼレール",
     links:[{label:"公式サイト",url:"https://kk-bizen.jp",primary:true},{label:"Webカタログ",url:"https://kk-bizen.jp",primary:false}] },
-  { id:26, kana:"ひ", name:"広田産業",       desc:"主な製品：みくに式種まき機、みくに式 散粒機５０",
+  { id:27, kana:"ひ", name:"広田産業", desc:"主な製品：みくに式種まき機、みくに式 散粒機５０",
     links:[{label:"公式サイト",url:"http://hirota-sangyo.co.jp",primary:true},{label:"Webカタログ",url:"https://ipros.com",primary:false}] },
-  { id:27, kana:"ふ", name:"福助",           desc:"主な製品：ユニパック（0.04/0.08）、ディプロ 除菌 ウェットワイパー",
+  { id:28, kana:"ふ", name:"福助", desc:"主な製品：ユニパック（0.04/0.08）、ディプロ 除菌 ウェットワイパー",
     links:[{label:"公式サイト",url:"https://fukusuke-kogyo.co.jp",primary:true},{label:"Webカタログ",url:"https://fukusuke-kogyo.co.jp/products/web",primary:false}] },
-  { id:28, kana:"ふ", name:"フクトウ",       desc:"みのるの部品表参考サイト",
+  { id:29, kana:"ふ", name:"フクトウ", desc:"みのるの部品表参考サイト",
     links:[{label:"みのる部品表",url:"https://fukutou.co.jp",primary:true}] },
-  { id:29, kana:"ま", name:"マックス",       desc:"主な製品：結束機テープナー、光分解テープ、ステープル、ザクリオ",
+  { id:30, kana:"ま", name:"マックス", desc:"主な製品：結束機テープナー、光分解テープ、ステープル、ザクリオ",
     links:[{label:"公式サイト",url:"https://max-ltd.co.jp",primary:true},{label:"Webカタログ",url:"https://max-ltd.co.jp/support/download/af/catalog/",primary:false}] },
-  { id:30, kana:"ま", name:"マリンプラスチック",desc:"主な製品：フレコン、丸型くみたて槽、角型くみたて槽、フレキシブルコンテナ",
+  { id:31, kana:"ま", name:"マリンプラスチック", desc:"主な製品：フレコン、丸型くみたて槽、角型くみたて槽、フレキシブルコンテナ",
     links:[{label:"公式サイト",url:"https://n-m-p.net",primary:true},{label:"Webカタログ",url:"https://n-m-p.net",primary:false}] },
-  { id:31, kana:"み", name:"みのる産業",     desc:"主な製品：ツッキー、もち切機、追肥機、ステッキ注入機、播種機、ハンドプランター",
+  { id:32, kana:"み", name:"みのる産業", desc:"主な製品：ツッキー、もち切機、追肥機、ステッキ注入機、播種機、ハンドプランター",
     links:[{label:"公式サイト",url:"https://agri-style.com",primary:true},{label:"取り扱い説明書",url:"https://agri-style.com",primary:false}] },
-  { id:32, kana:"み", name:"未来のアグリ",   desc:"（製品カタログ情報）",
-    links:[{label:"公式サイト",url:"https://mirai-no-agri.jp",primary:true},{label:"Webカタログ",url:"https://mirai-no-agri.jp/products/catalog/",primary:false}] },
+  { id:33, kana:"み", name:"未来のアグリ", desc:"（製品カタログ情報）",
+    links:[{label:"公式サイト",url:"https://mirai-no-agri.jp",primary:true},{label:"Webカタログ",url:"https://mirai-no-agri.jp/products/catalog/",primary:false}] }
 ];
 
-/* ══════════════════════════════════════════════════════════════════
-   定数管理
-   ── ここを変更するだけで動作を調整できます ──
-   ══════════════════════════════════════════════════════════════════ */
-const CONSTANTS = {
-  /* localStorage のキー名 */
-  STORAGE_KEY_WATCH:   'catalog_watch_data',    // URL監視データ保存キー
-  STORAGE_KEY_HISTORY: 'catalog_watch_history', // 変更履歴保存キー
-
-  /* 監視の並列リクエスト数（大きすぎるとブラウザ制限に引っかかる） */
-  FETCH_CONCURRENCY: 5,
-
-  /* 1リクエストのタイムアウト（ミリ秒） */
-  FETCH_TIMEOUT_MS: 10000,
-
-  /* 履歴の最大保存件数（古いものから削除） */
-  HISTORY_MAX: 500,
-
-  /* 変更なし判定のラベル */
-  STATUS: {
-    OK:    'ok',     // 🟢 正常（前回と同じ）
-    WARN:  'warn',   // 🟡 未確認（初回取得など）
-    ALERT: 'alert',  // 🔴 変更あり
-    NONE:  'none',   // ⚪ 監視データなし
-  },
-
-  /* 変更種別ラベル */
-  CHANGE_TYPE: {
-    LAST_MODIFIED: 'lastModified変更',
-    ETAG:          'ETag変更',
-    SIZE:          'ファイルサイズ変更',
-    NEW:           '初回取得',
-    ERROR:         '取得エラー',
-  }
-};
-
-/* ══════════════════════════════════════════════════════════════════
-   状態管理
-   ══════════════════════════════════════════════════════════════════ */
-let suppliers  = JSON.parse(JSON.stringify(INIT_DATA)); // メーカー一覧
-let nextId     = Math.max(...suppliers.map(s => s.id)) + 1;
+let suppliers = loadData();
+let nextId = suppliers.length ? Math.max(...suppliers.map(s => s.id)) + 1 : 1;
 let activeKana = 'all';
-let editingId  = null;
+let editingId = null;
 
-/* ── 監視システム用の状態 ── */
-let watchRunning = false; // 監視が実行中かどうか
-
-/* ══════════════════════════════════════════════════════════════════
-   ■ 監視システム：localStorage ヘルパー
-   ══════════════════════════════════════════════════════════════════ */
-
-/**
- * 監視データをlocalStorageから取得する
- * @returns {Object} { "https://...": { url, lastModified, etag, size, checkedAt, status }, ... }
- */
-function loadWatchData() {
+/* ─── 永続化（localStorage） ─── */
+function loadData() {
   try {
-    const raw = localStorage.getItem(CONSTANTS.STORAGE_KEY_WATCH);
-    return raw ? JSON.parse(raw) : {};
-  } catch (e) {
-    console.warn('[Watch] watchデータ読み込み失敗:', e);
-    return {};
-  }
-}
-
-/**
- * 監視データをlocalStorageへ保存する
- * @param {Object} data - loadWatchData() と同じ形式
- */
-function saveWatchData(data) {
-  try {
-    localStorage.setItem(CONSTANTS.STORAGE_KEY_WATCH, JSON.stringify(data));
-  } catch (e) {
-    console.warn('[Watch] watchデータ保存失敗:', e);
-  }
-}
-
-/**
- * 変更履歴をlocalStorageから取得する
- * @returns {Array} 履歴エントリの配列（新しいものが先頭）
- */
-function loadHistory() {
-  try {
-    const raw = localStorage.getItem(CONSTANTS.STORAGE_KEY_HISTORY);
-    return raw ? JSON.parse(raw) : [];
-  } catch (e) {
-    console.warn('[Watch] 履歴読み込み失敗:', e);
-    return [];
-  }
-}
-
-/**
- * 変更履歴をlocalStorageへ保存する（最大件数を超えたら古いものを削除）
- * @param {Array} history - loadHistory() と同じ形式
- */
-function saveHistory(history) {
-  try {
-    // 最大件数を超えたら末尾（古いもの）を切り捨て
-    const trimmed = history.slice(0, CONSTANTS.HISTORY_MAX);
-    localStorage.setItem(CONSTANTS.STORAGE_KEY_HISTORY, JSON.stringify(trimmed));
-  } catch (e) {
-    console.warn('[Watch] 履歴保存失敗:', e);
-  }
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   ■ 監視システム：URLリスト収集
-   ══════════════════════════════════════════════════════════════════ */
-
-/**
- * 全メーカーのリンクURLを一意なリストとして収集する
- * メーカー名と紐づけた形で返す
- * @returns {Array} [{ supplierName, url }, ...]
- */
-function collectAllWatchUrls() {
-  const seen = new Set(); // 重複排除用
-  const result = [];
-
-  suppliers.forEach(s => {
-    s.links.forEach(l => {
-      if (!l.url) return;
-      // 同じURLが複数メーカーにあっても1回だけ登録
-      if (!seen.has(l.url)) {
-        seen.add(l.url);
-        result.push({
-          supplierName: s.name,
-          url: l.url
-        });
-      }
-    });
-  });
-
-  return result;
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   ■ 監視システム：URLフェッチ
-   ここを差し替えることで Node.js / GitHub Actions / Cloudflare Workers
-   への移行が容易になるよう、フェッチ処理を独立した関数にしています
-   ══════════════════════════════════════════════════════════════════ */
-
-/**
- * 1つのURLを HEAD リクエストで確認し、メタ情報を返す
- *
- * ＜CORS制限について＞
- * ブラウザから直接 fetch() すると、相手サーバーが CORS ヘッダーを
- * 返していない場合にエラーになります（mode:'no-cors'でも
- * ヘッダーは取得できません）。
- *
- * ＜将来の差し替えポイント＞
- * この関数の中身だけ変えれば：
- *   - Node.js サーバーへのリレーAPIとして動かせる
- *   - GitHub Actions のワークフローで呼び出せる
- *   - Cloudflare Workers のプロキシを経由できる
- *
- * @param {string} url - 確認対象のURL
- * @returns {Promise<Object>} { url, lastModified, etag, size, checkedAt, fetchError }
- */
-async function fetchUrlMeta(url) {
-  const checkedAt = formatDateTime(new Date());
-
-  // AbortController でタイムアウトを実装
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), CONSTANTS.FETCH_TIMEOUT_MS);
-
-  try {
-    // HEAD リクエストを試みる（ボディを取得せずメタ情報だけ確認）
-    const response = await fetch(url, {
-      method: 'HEAD',
-      mode:   'no-cors', // CORS制限がある場合もエラーを出さない設定
-                         // ただし no-cors だとヘッダーは読めない（opaque response）
-      signal: controller.signal,
-      cache:  'no-store', // キャッシュを使わず必ず新鮮な情報を取得
-    });
-
-    clearTimeout(timeoutId);
-
-    // no-corsの場合 response.type === 'opaque' になりヘッダーが読めない
-    // 将来プロキシ経由にする際はここを cors モードに変更する
-    const lastModified = response.headers?.get('Last-Modified') || null;
-    const etag         = response.headers?.get('ETag')          || null;
-    const contentLen   = response.headers?.get('Content-Length');
-    const size         = contentLen ? parseInt(contentLen, 10)  : null;
-
-    return { url, lastModified, etag, size, checkedAt, fetchError: null };
-
-  } catch (err) {
-    clearTimeout(timeoutId);
-
-    // タイムアウトとその他エラーを区別
-    const errMsg = err.name === 'AbortError' ? 'タイムアウト' : err.message;
-    console.warn(`[Watch] fetch失敗: ${url} → ${errMsg}`);
-
-    return { url, lastModified: null, etag: null, size: null, checkedAt, fetchError: errMsg };
-  }
-}
-
-/**
- * 並列数を制御しながら複数URLをフェッチする
- * Promise.allSettled を使い、1件失敗しても他の処理を止めない
- *
- * @param {Array}    urlItems   - [{ supplierName, url }, ...]
- * @param {Function} onProgress - 1件完了するたびに呼ばれるコールバック (doneCount, total)
- * @returns {Promise<Array>} fetchUrlMeta の結果配列
- */
-async function fetchAllUrlMeta(urlItems, onProgress) {
-  const results = [];
-  const total   = urlItems.length;
-  let   done    = 0;
-
-  // 並列数を FETCH_CONCURRENCY に制限するバッチ処理
-  for (let i = 0; i < total; i += CONSTANTS.FETCH_CONCURRENCY) {
-    const batch = urlItems.slice(i, i + CONSTANTS.FETCH_CONCURRENCY);
-
-    // このバッチを並列実行（1件失敗しても他は継続）
-    const batchResults = await Promise.allSettled(
-      batch.map(item => fetchUrlMeta(item.url))
-    );
-
-    batchResults.forEach((result, idx) => {
-      if (result.status === 'fulfilled') {
-        // supplierName を付け加えて保存
-        results.push({ ...result.value, supplierName: batch[idx].supplierName });
-      } else {
-        // Promise.allSettled なのでここには来ないはずだが念のため
-        results.push({
-          url: batch[idx].url,
-          supplierName: batch[idx].supplierName,
-          fetchError: result.reason?.message || '不明なエラー',
-          checkedAt: formatDateTime(new Date())
-        });
-      }
-      done++;
-      if (onProgress) onProgress(done, total);
-    });
-  }
-
-  return results;
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   ■ 監視システム：変更検出
-   ══════════════════════════════════════════════════════════════════ */
-
-/**
- * 新しく取得したメタ情報と保存済みデータを比較し、変更があれば検出する
- *
- * ＜将来のAI解析追加ポイント＞
- * この関数の末尾で変更検出結果を AI API に送り、
- * 「PDF内容の要約が変わったかどうか」などを判断させることができます。
- *
- * @param {Object} newMeta    - fetchUrlMeta の結果
- * @param {Object} oldRecord  - loadWatchData() の1エントリ（なければ null）
- * @returns {Array} 変更種別の配列（例：['lastModified変更', 'ファイルサイズ変更']）
- */
-function detectChanges(newMeta, oldRecord) {
-  const changes = [];
-
-  // 初回取得の場合
-  if (!oldRecord) {
-    changes.push(CONSTANTS.CHANGE_TYPE.NEW);
-    return changes;
-  }
-
-  // エラーだった場合はスキップ（エラーは変更として記録しない）
-  if (newMeta.fetchError) return changes;
-
-  // Last-Modified の変化を検出
-  if (newMeta.lastModified && oldRecord.lastModified &&
-      newMeta.lastModified !== oldRecord.lastModified) {
-    changes.push(CONSTANTS.CHANGE_TYPE.LAST_MODIFIED);
-  }
-
-  // ETag の変化を検出
-  if (newMeta.etag && oldRecord.etag &&
-      newMeta.etag !== oldRecord.etag) {
-    changes.push(CONSTANTS.CHANGE_TYPE.ETAG);
-  }
-
-  // ファイルサイズの変化を検出
-  if (newMeta.size !== null && oldRecord.size !== null &&
-      newMeta.size !== oldRecord.size) {
-    changes.push(CONSTANTS.CHANGE_TYPE.SIZE);
-  }
-
-  return changes;
-}
-
-/**
- * 変更種別の配列からカードに表示するステータスを決定する
- * @param {Array}   changes    - detectChanges() の結果
- * @param {Object}  oldRecord  - 既存の監視データ（なければ null）
- * @param {boolean} hasError   - fetchError があるかどうか
- * @returns {string} CONSTANTS.STATUS のいずれか
- */
-function determineStatus(changes, oldRecord, hasError) {
-  if (hasError) return CONSTANTS.STATUS.WARN; // エラーは未確認扱い
-
-  if (changes.includes(CONSTANTS.CHANGE_TYPE.NEW)) {
-    return CONSTANTS.STATUS.WARN; // 初回取得は未確認
-  }
-
-  if (changes.length > 0) {
-    return CONSTANTS.STATUS.ALERT; // 変更あり
-  }
-
-  return CONSTANTS.STATUS.OK; // 変更なし = 正常
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   ■ 監視システム：メイン処理
-   ══════════════════════════════════════════════════════════════════ */
-
-/**
- * 「👁 監視スタート」ボタン処理
- * 全メーカーのURLを巡回し、初回スナップショットを取得する
- */
-async function watchStart() {
-  if (watchRunning) {
-    showToast('監視が既に実行中です。しばらくお待ちください');
-    return;
-  }
-
-  const urlItems = collectAllWatchUrls();
-  if (urlItems.length === 0) {
-    showToast('監視対象のURLがありません');
-    return;
-  }
-
-  watchRunning = true;
-  setWatchProgressVisible(true);
-  document.getElementById('btn-watch-start').textContent = '⏳ 監視中...';
-  showToast(`${urlItems.length}件のURLを監視中...`);
-
-  try {
-    // フェッチ実行
-    const metaList = await fetchAllUrlMeta(urlItems, (done, total) => {
-      // 進捗はトーストで都度表示しない（完了時のみ）
-    });
-
-    // 既存の監視データを読み込む
-    const watchData = loadWatchData();
-    const history   = loadHistory();
-
-    // 各URLの結果を処理
-    metaList.forEach(meta => {
-      const old     = watchData[meta.url] || null;
-      const changes = detectChanges(meta, old);
-      const status  = determineStatus(changes, old, !!meta.fetchError);
-
-      // 監視データを更新（新規 or 上書き）
-      watchData[meta.url] = {
-        url:           meta.url,
-        supplierName:  meta.supplierName,
-        lastModified:  meta.lastModified,
-        etag:          meta.etag,
-        size:          meta.size,
-        checkedAt:     meta.checkedAt,
-        fetchError:    meta.fetchError,
-        status:        status,
-      };
-
-      // 変更があれば履歴に追加
-      if (changes.length > 0 && !changes.includes(CONSTANTS.CHANGE_TYPE.NEW)) {
-        addToHistory(history, meta, old, changes);
-      }
-    });
-
-    saveWatchData(watchData);
-    saveHistory(history);
-
-    // カードのバッジを更新
-    renderCards();
-    updateWatchSummary();
-
-    showToast(`監視完了：${urlItems.length}件確認しました`);
-  } catch (err) {
-    console.error('[Watch] 監視スタートエラー:', err);
-    showToast('監視中にエラーが発生しました');
-  } finally {
-    watchRunning = false;
-    setWatchProgressVisible(false);
-    document.getElementById('btn-watch-start').textContent = '👁 監視スタート';
-  }
-}
-
-/**
- * 「🔍 変更確認」ボタン処理
- * 前回の監視データと比較し、変更されたURLを検出する
- */
-async function watchCheckChanges() {
-  if (watchRunning) {
-    showToast('監視が既に実行中です');
-    return;
-  }
-
-  const existingData = loadWatchData();
-  if (Object.keys(existingData).length === 0) {
-    showToast('先に「👁 監視スタート」を実行してください');
-    return;
-  }
-
-  const urlItems = collectAllWatchUrls();
-  watchRunning   = true;
-  setWatchProgressVisible(true);
-  showToast(`変更確認中：${urlItems.length}件...`);
-
-  try {
-    const metaList  = await fetchAllUrlMeta(urlItems, null);
-    const watchData = loadWatchData();
-    const history   = loadHistory();
-    let   alertCount = 0;
-
-    metaList.forEach(meta => {
-      const old     = watchData[meta.url] || null;
-      const changes = detectChanges(meta, old);
-      const status  = determineStatus(changes, old, !!meta.fetchError);
-
-      // ステータスだけ更新（取得できた情報で上書き）
-      watchData[meta.url] = {
-        ...((watchData[meta.url]) || {}),
-        url:          meta.url,
-        supplierName: meta.supplierName,
-        lastModified: meta.lastModified || watchData[meta.url]?.lastModified,
-        etag:         meta.etag         || watchData[meta.url]?.etag,
-        size:         meta.size         ?? watchData[meta.url]?.size,
-        checkedAt:    meta.checkedAt,
-        fetchError:   meta.fetchError,
-        status:       status,
-      };
-
-      // 実際の変更（初回取得を除く）があれば履歴に追加
-      const realChanges = changes.filter(c => c !== CONSTANTS.CHANGE_TYPE.NEW);
-      if (realChanges.length > 0) {
-        alertCount++;
-        addToHistory(history, meta, old, realChanges);
-      }
-    });
-
-    saveWatchData(watchData);
-    saveHistory(history);
-
-    renderCards();
-    updateWatchSummary();
-
-    if (alertCount > 0) {
-      showToast(`⚠ ${alertCount}件の変更を検出しました！「履歴」を確認してください`);
-    } else {
-      showToast('変更確認完了：変更は検出されませんでした');
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
     }
-  } catch (err) {
-    console.error('[Watch] 変更確認エラー:', err);
-    showToast('変更確認中にエラーが発生しました');
-  } finally {
-    watchRunning = false;
-    setWatchProgressVisible(false);
+  } catch (e) {}
+  return JSON.parse(JSON.stringify(INIT_DATA));
+}
+
+function persistData() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(suppliers));
+  } catch (e) {
+    showToast('自動保存に失敗しました');
   }
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   ■ 監視システム：履歴管理
-   ══════════════════════════════════════════════════════════════════ */
-
-/**
- * 変更を履歴に追加する
- * @param {Array}  history  - 現在の履歴配列（破壊的に変更する）
- * @param {Object} meta     - 新しいfetchUrlMeta結果
- * @param {Object} oldData  - 古い監視データ
- * @param {Array}  changes  - detectChanges の結果
- */
-function addToHistory(history, meta, oldData, changes) {
-  changes.forEach(changeType => {
-    // 変更種別に応じて前回値・今回値を設定
-    let prevValue = '';
-    let newValue  = '';
-
-    if (changeType === CONSTANTS.CHANGE_TYPE.LAST_MODIFIED) {
-      prevValue = oldData?.lastModified || '(なし)';
-      newValue  = meta.lastModified      || '(なし)';
-    } else if (changeType === CONSTANTS.CHANGE_TYPE.ETAG) {
-      prevValue = oldData?.etag || '(なし)';
-      newValue  = meta.etag      || '(なし)';
-    } else if (changeType === CONSTANTS.CHANGE_TYPE.SIZE) {
-      prevValue = oldData?.size != null ? `${oldData.size.toLocaleString()} bytes` : '(不明)';
-      newValue  = meta.size      != null ? `${meta.size.toLocaleString()} bytes`   : '(不明)';
-    } else if (changeType === CONSTANTS.CHANGE_TYPE.NEW) {
-      prevValue = '(初回取得)';
-      newValue  = '初回スナップショット取得';
-    }
-
-    history.unshift({
-      supplierName: meta.supplierName || '',
-      url:          meta.url,
-      detectedAt:   meta.checkedAt,
-      changeType:   changeType,
-      prevValue:    prevValue,
-      newValue:     newValue,
-    });
-  });
-}
-
-/**
- * 「📜 履歴」モーダルを開く
- */
-function openHistoryModal() {
-  renderHistoryTable();
-  document.getElementById('modal-history').classList.add('open');
-}
-
-/**
- * 履歴モーダルを閉じる
- */
-function closeHistoryModal() {
-  document.getElementById('modal-history').classList.remove('open');
-}
-
-/**
- * 履歴テーブルをHTMLとして描画する
- */
-function renderHistoryTable() {
-  const wrap   = document.getElementById('hist-table-wrap');
-  const history = loadHistory();
-
-  if (history.length === 0) {
-    wrap.innerHTML = '<div class="hist-empty">📭 変更履歴はまだありません。<br>「👁 監視スタート」→「🔍 変更確認」を実行してください。</div>';
-    return;
-  }
-
-  // 変更種別に応じたバッジCSSクラスを返す
-  function badgeClass(changeType) {
-    if (changeType === CONSTANTS.CHANGE_TYPE.LAST_MODIFIED) return 'badge-modified';
-    if (changeType === CONSTANTS.CHANGE_TYPE.ETAG)          return 'badge-etag';
-    if (changeType === CONSTANTS.CHANGE_TYPE.SIZE)          return 'badge-size';
-    return 'badge-new';
-  }
-
-  const rows = history.map(h => `
-    <tr>
-      <td style="white-space:nowrap; font-weight:600;">${esc(h.supplierName)}</td>
-      <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;">
-        <a href="${esc(h.url)}" target="_blank" style="color:var(--green-dk); text-decoration:none;"
-           title="${esc(h.url)}">${esc(shortenUrl(h.url))}</a>
-      </td>
-      <td style="white-space:nowrap;">${esc(h.detectedAt)}</td>
-      <td><span class="change-type-badge ${badgeClass(h.changeType)}">${esc(h.changeType)}</span></td>
-      <td style="color:var(--text-sub);">${esc(h.prevValue)}</td>
-      <td>${esc(h.newValue)}</td>
-    </tr>
-  `).join('');
-
-  wrap.innerHTML = `
-    <table class="hist-table">
-      <thead>
-        <tr>
-          <th>メーカー名</th>
-          <th>URL</th>
-          <th>検出日時</th>
-          <th>変更種別</th>
-          <th>前回値</th>
-          <th>今回値</th>
-        </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-    </table>
-  `;
-}
-
-/**
- * 履歴をJSONファイルとしてエクスポートする
- */
-function exportHistoryJson() {
-  const history = loadHistory();
-  if (history.length === 0) {
-    showToast('エクスポートする履歴がありません');
-    return;
-  }
-
-  const json     = JSON.stringify(history, null, 2);
-  const blob     = new Blob([json], { type: 'application/json;charset=utf-8' });
-  const a        = document.createElement('a');
-  a.href         = URL.createObjectURL(blob);
-  a.download     = `catalog_watch_history_${formatDateTimeFile(new Date())}.json`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-  showToast('JSONエクスポートしました');
-}
-
-/**
- * 履歴を全件削除する
- */
-function clearHistory() {
-  if (!confirm('変更履歴を全件削除しますか？この操作は元に戻せません。')) return;
-  saveHistory([]);
-  renderHistoryTable();
-  updateWatchSummary();
-  showToast('履歴を削除しました');
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   ■ 監視システム：UIヘルパー
-   ══════════════════════════════════════════════════════════════════ */
-
-/**
- * 進捗バーの表示・非表示を切り替える
- * @param {boolean} visible
- */
-function setWatchProgressVisible(visible) {
-  const bar = document.getElementById('watch-progress');
-  if (visible) {
-    bar.classList.add('active');
-  } else {
-    bar.classList.remove('active');
-  }
-}
-
-/**
- * サマリーバーの数値を更新する
- */
-function updateWatchSummary() {
-  const watchData = loadWatchData();
-  const records   = Object.values(watchData);
-
-  if (records.length === 0) {
-    document.getElementById('watch-summary-bar').classList.remove('visible');
-    return;
-  }
-
-  // ステータス別に集計
-  const okCount    = records.filter(r => r.status === CONSTANTS.STATUS.OK).length;
-  const warnCount  = records.filter(r => r.status === CONSTANTS.STATUS.WARN).length;
-  const alertCount = records.filter(r => r.status === CONSTANTS.STATUS.ALERT).length;
-
-  // 最終確認日時（最新のcheckedAt）
-  const lastCheck = records
-    .map(r => r.checkedAt)
-    .filter(Boolean)
-    .sort()
-    .at(-1) || '';
-
-  document.getElementById('ws-ok-count').textContent    = okCount;
-  document.getElementById('ws-warn-count').textContent  = warnCount;
-  document.getElementById('ws-alert-count').textContent = alertCount;
-  document.getElementById('ws-last-check').textContent  = lastCheck ? `最終確認：${lastCheck}` : '';
-
-  document.getElementById('watch-summary-bar').classList.add('visible');
-}
-
-/**
- * 1メーカーの監視ステータスを取得する
- * （カード内バッジ表示に使用）
- *
- * @param {Object} supplier - suppliersの1エントリ
- * @returns {{ status: string, checkedAt: string|null, hasAlert: boolean }}
- */
-function getSupplierWatchStatus(supplier) {
-  const watchData = loadWatchData();
-  let   worst     = null; // 最も重要なステータス（alertが最優先）
-  let   latestCheckedAt = null;
-
-  supplier.links.forEach(l => {
-    const record = watchData[l.url];
-    if (!record) return;
-
-    // 最新の確認日時を保持
-    if (!latestCheckedAt || record.checkedAt > latestCheckedAt) {
-      latestCheckedAt = record.checkedAt;
-    }
-
-    // 最悪ステータスを選択（alert > warn > ok の優先度）
-    const priority = { alert: 3, warn: 2, ok: 1, none: 0 };
-    if (!worst || priority[record.status] > priority[worst]) {
-      worst = record.status;
-    }
-  });
-
-  return {
-    status:     worst || CONSTANTS.STATUS.NONE,
-    checkedAt:  latestCheckedAt,
-    hasAlert:   worst === CONSTANTS.STATUS.ALERT,
-  };
-}
-
-/**
- * ステータスに対応する絵文字と日本語ラベルを返す
- * @param {string} status - CONSTANTS.STATUS のいずれか
- * @returns {{ dot: string, label: string }}
- */
-function statusLabel(status) {
-  switch (status) {
-    case CONSTANTS.STATUS.OK:    return { dot: '🟢', label: '正常' };
-    case CONSTANTS.STATUS.WARN:  return { dot: '🟡', label: '未確認' };
-    case CONSTANTS.STATUS.ALERT: return { dot: '🔴', label: '変更あり' };
-    default:                     return { dot: '⚪', label: '未監視' };
-  }
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   ■ ユーティリティ関数
-   ══════════════════════════════════════════════════════════════════ */
-
-/**
- * Date を「YYYY-MM-DD HH:mm:ss」形式の文字列に変換する
- * @param {Date} date
- * @returns {string}
- */
-function formatDateTime(date) {
-  const pad = n => String(n).padStart(2, '0');
-  return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ` +
-         `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-}
-
-/**
- * ファイル名用に使える日時文字列を返す（コロンなし）
- * @param {Date} date
- * @returns {string}
- */
-function formatDateTimeFile(date) {
-  return formatDateTime(date).replace(/[: ]/g, '-');
-}
-
-/**
- * 長いURLを省略表示する（履歴テーブル用）
- * @param {string} url
- * @param {number} maxLen
- * @returns {string}
- */
-function shortenUrl(url, maxLen = 40) {
-  if (!url) return '';
-  return url.length > maxLen ? url.slice(0, maxLen) + '…' : url;
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   レンダリング（既存ロジックを拡張）
-   ══════════════════════════════════════════════════════════════════ */
+/* ─── ソート・描画 ─── */
 function kanaSort(a, b) {
-  const order = ['あ','い','う','え','お','か','き','く','け','こ',
-                 'さ','し','す','せ','そ','た','ち','つ','て','と',
-                 'な','に','ぬ','ね','の','は','ひ','ふ','へ','ほ',
-                 'ま','み','む','め','も','や','ゆ','よ',
-                 'ら','り','る','れ','ろ','わ','を','ん'];
-  const ia = order.indexOf(a.kana), ib = order.indexOf(b.kana);
-  if (ia !== ib) return ia - ib;
+  const ia = KANA_ORDER.indexOf(a.kana);
+  const ib = KANA_ORDER.indexOf(b.kana);
+  if (ia !== ib) return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
   return a.name.localeCompare(b.name, 'ja');
+}
+
+function initKanaSelect() {
+  const sel = document.getElementById('f-kana');
+  sel.innerHTML = KANA_ORDER.map(k => `<option value="${k}">${k}</option>`).join('');
 }
 
 function renderAll() {
   renderFilter();
   renderCards();
-  updateBadge(false);
-  updateWatchSummary(); // ← 監視サマリーも更新
 }
 
 function renderFilter() {
   const sorted = [...suppliers].sort(kanaSort);
-  const kanaOrder = [];
-  sorted.forEach(s => { if (!kanaOrder.includes(s.kana)) kanaOrder.push(s.kana); });
+  const usedKana = [];
+  sorted.forEach(s => { if (!usedKana.includes(s.kana)) usedKana.push(s.kana); });
+
+  if (activeKana !== 'all' && !usedKana.includes(activeKana)) {
+    activeKana = 'all';
+  }
 
   const wrap = document.getElementById('kana-filter');
   wrap.innerHTML = '';
+
   const mkBtn = (label, val) => {
     const b = document.createElement('button');
     b.className = 'filter-btn' + (val === activeKana ? ' active' : '');
@@ -1179,12 +612,18 @@ function renderFilter() {
     b.onclick = () => { activeKana = val; renderFilter(); renderCards(); };
     wrap.appendChild(b);
   };
+
   mkBtn('すべて', 'all');
-  kanaOrder.forEach(k => mkBtn(k, k));
+  usedKana.forEach(k => mkBtn(k, k));
+
+  const countSpan = document.createElement('span');
+  countSpan.className = 'count-text';
+  countSpan.id = 'count-label';
+  wrap.appendChild(countSpan);
 }
 
 function renderCards() {
-  const grid   = document.getElementById('card-grid');
+  const grid = document.getElementById('card-grid');
   const sorted = [...suppliers].sort(kanaSort);
   const filtered = activeKana === 'all' ? sorted : sorted.filter(s => s.kana === activeKana);
 
@@ -1192,81 +631,68 @@ function renderCards() {
   filtered.forEach(s => grid.appendChild(buildCard(s)));
 
   const label = document.getElementById('count-label');
-  label.textContent = activeKana === 'all'
-    ? `全 ${filtered.length} 件`
-    : `「${activeKana}」 ${filtered.length} 件`;
+  if (label) {
+    label.textContent = activeKana === 'all'
+      ? `全 ${filtered.length} 件`
+      : `「${activeKana}」 ${filtered.length} 件`;
+  }
 }
 
-/**
- * カードを生成する（監視ステータスバッジを追加）
- * @param {Object} s - supplierデータ
- * @returns {HTMLElement}
- */
 function buildCard(s) {
-  const div = document.createElement('div');
+  const div = document.createElement('article');
   div.className = 'card';
-  div.dataset.id = s.id;
 
-  const linksHTML = s.links.map(l =>
-    `<a href="${esc(l.url)}" target="_blank" class="${l.primary ? 'btn-primary' : 'btn-secondary'}">${esc(l.label)}</a>`
+  const linksHTML = s.links.map((l, idx) =>
+    `<a href="${esc(l.url)}" target="_blank" rel="noopener noreferrer" class="link-btn ${idx === 0 ? 'primary' : 'secondary'}">${esc(l.label)}</a>`
   ).join('');
-
-  // 監視ステータスを取得してバッジHTMLを生成
-  const watchInfo   = getSupplierWatchStatus(s);
-  const { dot, label } = statusLabel(watchInfo.status);
-  const dateStr     = watchInfo.checkedAt ? watchInfo.checkedAt : '';
-  const watchBadge  = `
-    <div class="watch-status ${watchInfo.status}">
-      <span class="watch-dot">${dot}</span>
-      <div class="watch-info">
-        <div>${label}</div>
-        ${dateStr ? `<div class="watch-info-date">${dateStr}</div>` : ''}
-      </div>
-    </div>`;
 
   div.innerHTML = `
     <div class="card-head">
-      <span class="card-name">${esc(s.name)}</span>
-      <span class="kana-badge">${esc(s.kana)}</span>
+      <div class="card-title-wrap">
+        <span class="kana-badge">${esc(s.kana)}</span>
+        <h2 class="card-name">${esc(s.name)}</h2>
+      </div>
+      <div class="card-tools">
+        <button type="button" class="icon-btn" onclick="openEditModal(${s.id})">編集</button>
+        <button type="button" class="icon-btn del" onclick="deleteCard(${s.id})">削除</button>
+      </div>
     </div>
-    <p class="card-desc">${esc(s.desc)}</p>
+    <p class="card-desc">${esc(s.desc || '—')}</p>
     <div class="card-links">${linksHTML}</div>
-    ${watchBadge}
-    <div class="card-actions">
-      <button class="action-btn btn-edit-card" onclick="openEditModal(${s.id})">✏️ 編集</button>
-      <button class="action-btn btn-del-card"  onclick="deleteCard(${s.id})">🗑 削除</button>
-    </div>`;
+  `;
   return div;
 }
 
 function esc(str) {
   return String(str ?? '')
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   モーダル（既存）
-   ══════════════════════════════════════════════════════════════════ */
+/* ─── モーダル操作 ─── */
 function openAddModal() {
   editingId = null;
   document.getElementById('modal-title').textContent = 'メーカー追加';
-  document.getElementById('f-name').value  = '';
-  document.getElementById('f-kana').value  = '';
-  document.getElementById('f-desc').value  = '';
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-kana').value = activeKana === 'all' ? 'あ' : activeKana;
+  document.getElementById('f-desc').value = '';
   document.getElementById('link-list').innerHTML = '';
-  addLinkRow({ label:'公式サイト', url:'', primary:true });
+  addLinkRow({ label: '公式サイト', url: '' });
   document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('f-name').focus();
 }
 
 function openEditModal(id) {
   const s = suppliers.find(x => x.id === id);
   if (!s) return;
   editingId = id;
-  document.getElementById('modal-title').textContent = '編集：' + s.name;
+  document.getElementById('modal-title').textContent = `編集：${s.name}`;
   document.getElementById('f-name').value = s.name;
-  document.getElementById('f-kana').value = s.kana;
-  document.getElementById('f-desc').value = s.desc;
+  document.getElementById('f-kana').value = KANA_ORDER.includes(s.kana) ? s.kana : 'あ';
+  document.getElementById('f-desc').value = s.desc || '';
   const ll = document.getElementById('link-list');
   ll.innerHTML = '';
   s.links.forEach(l => addLinkRow(l));
@@ -1278,100 +704,112 @@ function closeModal() {
   editingId = null;
 }
 
-function confirmModal() {
-  const name = document.getElementById('f-name').value.trim();
-  const kana = document.getElementById('f-kana').value.trim();
-  const desc = document.getElementById('f-desc').value.trim();
-  if (!name) { showToast('会社名を入力してください'); return; }
-  if (!kana) { showToast('頭文字を入力してください'); return; }
-
-  const links = [];
-  document.querySelectorAll('.link-group').forEach((g, i) => {
-    const label   = g.querySelector('.lbl').value.trim();
-    const url     = g.querySelector('.url').value.trim();
-    const primary = i === 0;
-    if (label && url) links.push({ label, url, primary });
-  });
-  if (links.length === 0) { showToast('リンクを1つ以上追加してください'); return; }
-
-  if (editingId !== null) {
-    const idx = suppliers.findIndex(x => x.id === editingId);
-    if (idx !== -1) suppliers[idx] = { id: editingId, kana, name, desc, links };
-    showToast('更新しました');
-  } else {
-    suppliers.push({ id: nextId++, kana, name, desc, links });
-    showToast('追加しました');
-  }
-
-  closeModal();
-  renderAll();
-  updateBadge(true);
-}
-
-/* ─── リンク行 ─── */
 function addLinkRow(preset) {
-  const ll  = document.getElementById('link-list');
-  const idx = ll.children.length;
-  const g   = document.createElement('div');
-  g.className = 'link-group';
+  const ll = document.getElementById('link-list');
+  const g = document.createElement('div');
+  g.className = 'link-item';
+
+  const chips = LINK_PRESETS.map(p =>
+    `<button type="button" class="preset-chip" onclick="setPresetLabel(this, '${p}')">${p}</button>`
+  ).join('');
+
   g.innerHTML = `
-    <div class="link-group-title">リンク ${idx + 1}</div>
-    <div class="form-row" style="margin-bottom:8px">
-      <label>ボタンラベル</label>
-      <input type="text" class="lbl" placeholder="例：公式サイト" value="${esc(preset?.label ?? '')}">
+    <div class="link-item-head">
+      <span class="link-item-title">リンク</span>
+      <button type="button" class="btn-rm-link" onclick="removeLinkRow(this)">削除</button>
     </div>
-    <div class="form-row" style="margin-bottom:0">
-      <label>URL</label>
+    <div class="preset-wrap">${chips}</div>
+    <div style="margin-bottom:6px">
+      <input type="text" class="lbl" placeholder="ボタン名（例：公式サイト）" value="${esc(preset?.label ?? '')}">
+    </div>
+    <div>
       <input type="url" class="url" placeholder="https://..." value="${esc(preset?.url ?? '')}">
     </div>
-    <button class="btn-rm-link" onclick="this.closest('.link-group').remove(); reindexLinks()">削除</button>`;
+  `;
   ll.appendChild(g);
   reindexLinks();
 }
 
+function setPresetLabel(btn, text) {
+  const item = btn.closest('.link-item');
+  item.querySelector('.lbl').value = text;
+  item.querySelector('.url').focus();
+}
+
+function removeLinkRow(btn) {
+  const ll = document.getElementById('link-list');
+  if (ll.children.length <= 1) {
+    showToast('リンクは最低1つ必要です');
+    return;
+  }
+  btn.closest('.link-item').remove();
+  reindexLinks();
+}
+
 function reindexLinks() {
-  document.querySelectorAll('.link-group').forEach((g, i) => {
-    g.querySelector('.link-group-title').textContent = `リンク ${i + 1}`;
+  document.querySelectorAll('.link-item').forEach((g, i) => {
+    g.querySelector('.link-item-title').textContent = `リンク ${i + 1}`;
   });
 }
 
-/* ─── 削除 ─── */
-function deleteCard(id) {
-  if (!confirm('このメーカーを削除しますか？')) return;
-  suppliers = suppliers.filter(s => s.id !== id);
+function confirmModal() {
+  const name = document.getElementById('f-name').value.trim();
+  const kana = document.getElementById('f-kana').value;
+  const desc = document.getElementById('f-desc').value.trim();
+
+  if (!name) { showToast('会社名を入力してください'); return; }
+
+  const links = [];
+  document.querySelectorAll('.link-item').forEach((g, i) => {
+    const label = g.querySelector('.lbl').value.trim();
+    const url = g.querySelector('.url').value.trim();
+    if (label && url) links.push({ label, url, primary: i === 0 });
+  });
+
+  if (links.length === 0) {
+    showToast('リンクのボタン名とURLを入力してください');
+    return;
+  }
+
+  if (editingId !== null) {
+    const idx = suppliers.findIndex(x => x.id === editingId);
+    if (idx !== -1) suppliers[idx] = { id: editingId, kana, name, desc, links };
+    showToast('更新して保存しました');
+  } else {
+    suppliers.push({ id: nextId++, kana, name, desc, links });
+    showToast('追加して保存しました');
+  }
+
+  persistData();
+  closeModal();
   renderAll();
-  updateBadge(true);
+}
+
+function deleteCard(id) {
+  const target = suppliers.find(s => s.id === id);
+  if (!target) return;
+  if (!confirm(`「${target.name}」を削除しますか？`)) return;
+  suppliers = suppliers.filter(s => s.id !== id);
+  persistData();
+  renderAll();
   showToast('削除しました');
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   保存・読込（既存）
-   ══════════════════════════════════════════════════════════════════ */
-function updateBadge(unsaved) {
-  const b = document.getElementById('save-badge');
-  b.textContent = unsaved ? '⚠ 未保存の変更があります' : '✔ 保存済み';
-  b.style.color  = unsaved ? 'var(--accent)' : 'var(--green-lt)';
-}
-
-function saveData() {
-  /* 現在のデータをINIT_DATAとして埋め込んだ新しいHTMLを生成 */
-  const json   = JSON.stringify(suppliers, null, 2);
-  const src    = document.documentElement.outerHTML;
-  const marker = /const INIT_DATA = \[[\s\S]*?\];/;
-  const updated = src.replace(marker, `const INIT_DATA = ${json};`);
-
-  const blob = new Blob([updated], { type: 'text/html;charset=utf-8' });
-  const a    = document.createElement('a');
-  a.href     = URL.createObjectURL(blob);
-  a.download = 'catalog_editable.html';
+/* ─── JSON 書き出し／読み込み（バックアップ・他PC移行用） ─── */
+function exportJson() {
+  const json = JSON.stringify(suppliers, null, 2);
+  const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
+  const a = document.createElement('a');
+  const d = new Date();
+  const ymd = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  a.href = URL.createObjectURL(blob);
+  a.download = `catalog_backup_${ymd}.json`;
   a.click();
   URL.revokeObjectURL(a.href);
-
-  updateBadge(false);
-  showToast('HTMLファイルを保存しました');
+  showToast('JSONファイルを書き出しました');
 }
 
-function importData() {
+function triggerImport() {
   document.getElementById('file-input').click();
 }
 
@@ -1381,53 +819,42 @@ function handleImport(e) {
   const reader = new FileReader();
   reader.onload = ev => {
     try {
-      const text  = ev.target.result;
-      const match = text.match(/const INIT_DATA = (\[[\s\S]*?\]);/);
-      if (!match) throw new Error('データが見つかりません');
-      const data = JSON.parse(match[1]);
-      if (!Array.isArray(data)) throw new Error('形式エラー');
+      const data = JSON.parse(ev.target.result);
+      if (!Array.isArray(data)) throw new Error('配列形式ではありません');
       suppliers = data;
-      nextId    = Math.max(...suppliers.map(s => s.id)) + 1;
+      nextId = suppliers.length ? Math.max(...suppliers.map(s => Number(s.id) || 0)) + 1 : 1;
       activeKana = 'all';
+      persistData();
       renderAll();
-      updateBadge(false);
-      showToast(`読み込み完了：${suppliers.length}件`);
+      showToast(`${suppliers.length}件のデータを読み込みました`);
     } catch (err) {
-      showToast('読み込みに失敗しました：' + err.message);
+      showToast('読み込み失敗：' + err.message);
     }
     e.target.value = '';
   };
   reader.readAsText(file, 'utf-8');
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   Toast（既存）
-   ══════════════════════════════════════════════════════════════════ */
+/* ─── Toast ─── */
 let toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   モーダル外クリックで閉じる（既存 + 履歴モーダル対応を追加）
-   ══════════════════════════════════════════════════════════════════ */
-document.getElementById('modal-overlay').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
+/* ─── イベント・初期化 ─── */
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
 });
-document.getElementById('modal-history').addEventListener('click', function(e) {
-  if (e.target === this) closeHistoryModal();
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
 });
 
-/* ══════════════════════════════════════════════════════════════════
-   初期描画
-   ══════════════════════════════════════════════════════════════════ */
-renderAll();       // カード・フィルター・バッジを描画
-updateBadge(false); // 「保存済み」バッジを初期化
-updateWatchSummary(); // 監視サマリーバーを初期化（データがあれば表示）
+initKanaSelect();
+renderAll();
 </script>
 </body>
 </html>
